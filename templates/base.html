@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/static/styles/base.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>   
+        <title>CSET 180</title>
+    </head>
+
+    <header class="header">
+        <nav class="nav">
+            <div class="row">
+                <h1 class="stated">E-COMMERCE CARS</h1>
+                <ul class="navigation">
+                    <li class="navlink"><a href="#home" class="navlink1" style="color: white;"></a>Home</li> 
+                    <li class="navlink"><a href="#property" class="navlink1">Mercedes-Benz</a></li>
+                    <li class="navlink"><a href="#agent" class="navlink1">BMW</a></li>
+                    <li class="navlink"><a href="#about" class="navlink1">Volkswagon</a></li>
+                    <li class="navlink"><a href="#news" class="navlink1">News</a></li>
+                    <li class="navlink"><a href="#contact" class="navlink1">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <section class="landing-page">
+        <div class="landing-image">
+            <img src="/static/images/headerpic.jpeg" alt="">
+        </div>
+        <div class="filter"></div>
+        <div class="landing-title">
+            <div>
+                <h1>
+                    Brick and Cyber
+                </h1>
+                <p>
+                    Buy new and used vehicles in this one-stop shop. Good credit, bad credit, no credit, you will drive off with a quality vehicle you can be proud of with a low payment.
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="customer">
+        <div class="customer-block">
+            {% if curr is defined %}
+                <h1>Welcome, {{ curr }}!</h1>
+            {% else %}
+                <h1>Welcome!</h1>
+            {% endif %}
+        </div>
+    </section>
+
+    {% block body %}
+    {% endblock %}
+
+
+
+
+
+
+    <footer class="footer">
+        <div class="foot-block">
+            <div class="foot-details">
+                <div class="foot-left">
+                    <div class="foot-about">
+                        <h3>About E-Commerce Cars</h3>
+                        <p>
+                            Our mission is to earn our Customer's loyalty by delivering sales and service experiences with high quality, excellent value, integrity and enthusiasm. We will function as a team, work ethically, and focus on meeting and striving to exceed the expectations of our Customers.
+                        </p>
+                    </div>
+                </div>
+                <div class="foot-right">
+                    <div class="quick-links">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#">About Us</a></li> 
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Testimonials</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="subscribe">
+                        <h3>Subscribe to Our Newsletter</h3>
+                        <div class="newsletter">
+                            <input type="text" placeholder="Enter Email" name="email">
+                            <button class="enter-news">Send</button>
+                        </div>
+                        <div class="media-icons">
+                            <h3>Follow Us</h3>
+                            <a href="#" class="fa fa-facebook"></a>
+                            <a href="#" class="fa fa-twitter"></a>
+                            <a href="#" class="fa fa-instagram"></a>
+                            <a href="#" class="fa fa-linkedin"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="site-credit">
+            <div class="credit">
+                <p>Copyright © 2021 All rights reserved | This template was recreated by Moisés Mañón.</p>
+            </div>
+        </div>
+    </footer>        
+</html>

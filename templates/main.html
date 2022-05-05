@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block body %}
+
+    <div class="searchForm">
+            <h3>Search Products</h3>
+            <form action="/search" method="GET" class="aform">
+                <p>Search by name:</p>
+                <input type="text" name="nsearch" class="search" placeholder="Search by name">
+                <input type="submit" name="nsearch" class="submit" value="Search">
+            </form><br>
+
+            <form action="/dsearch" method="GET" style="display: flex; flex-direction: column;">
+                <p>Search by description:</p>
+                <input type="text" name="dsearch" class="search" placeholder="Search by description">
+                <input type="submit" name="search" class="submit" value="Search">
+            </form><br>
+
+            <form action="/vsearch" method="GET" style="display: flex; flex-direction: column;">
+                <p>Search by vendor:</p>
+                <input type="text" name="vsearch" class="search" placeholder="Search by vendor">
+                <input type="submit" name="search" class="submit" value="Search">
+            </form>
+        </div>
+    </div>
+<div>
+    <form action="/main" method="GET">
+    <button type="submit" >Clear search</button>
+    </form>
+</div>
+
+<section class="products">
+    {% for y in name %}
+    <div class="proddiv">
+        <li>{{ y[3] }}</li>
+        <li>{{ y[8] }}</li>
+        <li>{{ y[4] }}</li>
+        <li>{{ y[7] }}</li>
+        <img src="{{ y[10] }}" alt="" style="width: 704px; height: 50%;">
+        <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+    </div>
+        {% endfor %}
+
+        {% for y in allproducts %}
+    <div class="proddiv">
+        <li>{{ y[2] }}</li>
+        <li>{{ y[7] }}</li>
+        <li>{{ y[3] }}</li>
+        <li>{{ y[6] }}</li>
+        <img src="{{ y[8] }}" alt="" style="width: 704px; height: 50%;">
+        <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+    </div>    
+        {% endfor %}
+</section>
+
+
+<button type="submit" formaction="/logout">Logout</button>
+{% endblock %}

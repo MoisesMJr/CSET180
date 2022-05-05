@@ -1,0 +1,211 @@
+* {
+  margin: 0;
+  padding: 0;
+  /* background-color: cornflowerblue; */
+}
+/* header */
+.nav {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  
+  background: rgba(52, 58, 64, 0.9);
+  transition: background-color 1s, padding 1s;
+  border-bottom: 1px solid black;
+  color: black;
+  padding: 30px 0px;
+}
+.navigation {
+  justify-content: space-between;
+  align-items: center;
+}
+.navlink {
+  display: inline-block;
+  padding: 0 20px;
+  margin: 10px;
+}
+.navlink1:hover {
+  color: white;
+}
+ul.navigation.is-sticky a:hover {
+  color: teal;
+}
+a {
+  text-decoration: none;
+  color: gray;
+}
+.row {
+  max-width: 1140px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  background: transparent;
+  border-bottom: white;
+}
+.stated {
+  display: inline-block;
+  color: white;
+}
+hr {
+  border: 1px solid silver;
+}
+.landing-title {
+  position: relative;
+  top: 45%;
+  width: 500px;
+  color: white;
+  text-align: center;
+}
+.landing-title h1 {
+  font-size: 3rem;
+}
+
+/* landing page  */
+.landing-page {
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.landing-image {
+  position: absolute;
+  height: 30%;
+  width: 100%;
+  overflow: hidden;
+}
+.filter {
+  position: absolute;
+  height: 30%;
+  width: 100%;
+  background: rgba(52, 58, 64, 0.9);
+}
+.landing-image img {
+  width: 100%;
+}
+.productForm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.aform {
+  display: flex;
+  flex-direction: column;
+}
+/* admin page  */
+.products {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  /* justify-content: center; */
+  justify-items: center;
+}
+.proddiv {
+  border: 2px solid black;
+  width: 44rem;
+  height: 750px;
+}
+
+.proddiv img {
+  height: 24rem;
+}
+
+/* customer page  */
+.customer {
+  padding: 3rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafa;
+}
+.customer-block {
+  text-align: center;
+  max-width: 1200px;
+}
+/* footer  */
+footer {
+  background: #333;
+  color: #777;
+  padding: 1rem 0;
+  
+}
+footer h3 {
+  font-family: "Playfair Display", serif;
+  color: white;
+}
+.foot-block {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.foot-details {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1200px;
+}
+.foot-credit {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.foot-left {
+  width: 30%;
+}
+.foot-about h3 {
+  margin-bottom: 20px;
+}
+.foot-right {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+}
+.quick-links ul {
+  list-style: none;
+}
+.quick-links ul li {
+  padding-top: 20px;
+}
+.quick-links ul li a {
+  color: #777;
+}
+.subscribe {
+  width: 60%;
+}
+.subscribe h3 {
+  margin-bottom: 20px;
+}
+.newsletter {
+  display: flex;
+  justify-content: space-between;
+}
+.newsletter input {
+  width: 100%;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 10px 20px;
+  border: 1px solid #777;
+  border-right: none;
+  background: transparent;
+}
+.newsletter button {
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  padding: 10px 20px;
+  border: none;
+  background: #f69314;
+}
+.site-credit {
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+
+}
+.credit {
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+}

@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  app:
+    build: ./
+    container_name: final_180
+    restart: always
+    ports:
+      - 2500:5000
+    volumes:
+      - ./:/app
+volumes:
+  app:

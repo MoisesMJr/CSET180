@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block body %}
+
+<section class="addProd">
+    <div class="productForm">
+        <form action="/admin" method="POST" class="aform">
+            <h3>Add New Products</h3>
+            <label>Vendor ID:</label>
+            <input type="number" name="vendorid">
+    
+            <label>Title:</label>
+            <input type="text" name="title">
+        
+            <label>Description:</label>
+            <input type="text" name="description">
+        
+            <label>Image URL:</label>
+            <input type="text" name="imgurl">
+        
+            <label>Warranty Period:</label>
+            <input type="number" name="warranty">
+        
+            <label>Category:</label>
+            <input type="text" name="category">
+        
+            <label>Color:</label>
+            <input type="text" name="color">
+        
+            <label>Number in Inventory:</label>
+            <input type="number" name="numinv">
+        
+            <label>Price:</label>
+            <input type="number" name="price">
+        
+            <button type="submit">Submit</button>
+        </form>
+        
+        <form action="/delete" method="POST" class="aform">
+            <h3>Delete Products</h3>
+            <label>Product ID:</label>
+            <input type="number" name="productid">
+
+            <button type="submit">Delete</button>
+        </form>
+    
+        <form action="/edit" method="POST" class="aform">
+            <h3>Update Products</h3>
+            <label>Product ID:</label>
+            <input type="number" name="pid" placeholder="Product ID" class="input_field"> 
+
+            <label>Title:</label>
+            <input type="text" name="title">
+
+            <label>Description:</label>
+            <input type="text" name="description">
+
+            <label>Image URL:</label>
+            <input type="text" name="imgurl">
+
+            <label>Warranty Period:</label>
+            <input type="number" name="warranty">
+
+            <label>Category:</label>
+            <input type="text" name="category">
+
+            <label>Color:</label>
+            <input type="text" name="color">
+
+            <label>Number in Inventory:</label>
+            <input type="number" name="numinv">
+
+            <label>Price:</label>
+            <input type="number" name="price">
+
+            <input type="submit" value="Submit" class="submit">
+        </form>
+
+
+        <div class="searchForm">
+            <h3>Search Products</h3>
+            <form action="/search" method="GET" class="aform">
+                <p>Search by name:</p>
+                <input type="text" name="nsearch" class="search" placeholder="Search by name">
+                <input type="submit" name="nsearch" class="submit" value="Search">
+            </form><br>
+    
+            <form action="/dsearch" method="GET" style="display: flex; flex-direction: column;">
+                <p>Search by description:</p>
+                <input type="text" name="dsearch" class="search" placeholder="Search by description">
+                <input type="submit" name="search" class="submit" value="Search">
+            </form><br>
+    
+            <form action="/vsearch" method="GET" style="display: flex; flex-direction: column;">
+                <p>Search by vendor:</p>
+                <input type="text" name="vsearch" class="search" placeholder="Search by vendor">
+                <input type="submit" name="search" class="submit" value="Search">
+            </form>
+        </div>
+    </div>
+    <div>
+    <form action="/admin" method="GET">
+    <button type="submit">Clear search</button>
+    </form>
+</div>
+
+</section><br>
+
+<section class="products">
+
+        {% for x in name %}
+    <div class="proddiv">
+        <li><b>Username:</b> {{ x[0] }}</li>
+        <li><b>Vendor ID:</b> {{ x[1] }}</li>
+        <li><b>Product ID:</b> {{ x[3] }}</li>
+        <li><b>Title:</b> {{ x[4] }}</li>
+        <li><b>Description:</b> {{ x[5] }}</li>
+        <li><b>Color:</b> {{ x[9] }}</li>
+        <li><b>Warranty Period:</b> {{ x[5] }} days.</li>
+        <li><b>Inventory:</b> {{ x[6] }}</li>
+        <li><b>Category:</b> {{ x[8] }}</li>
+        <li><b>Price:</b> ${{ x[7] }}</li>
+        <img src="{{ x[10] }}" alt="" style="width: 704px; height: 50%;"></li>
+    </div>
+        {% endfor %}
+
+</section>
+
+<section class="products">
+    {% for x in allproducts %}
+    <div class="proddiv">
+        <li><b>Username:</b> {{ x[2] }}</li>
+        <li><b>Vendor ID:</b> {{ x[1] }}</li>
+        <li><b>Product ID:</b> {{ x[0] }}</li>
+        <li><b>Title:</b> {{ x[3] }}</li>
+        <li><b>Description:</b> {{ x[4] }}</li>
+        <li><b>Color:</b> {{ x[10] }}</li>
+        <li><b>Warranty Period:</b> {{ x[5] }} days.</li>
+        <li><b>Inventory:</b> {{ x[6] }}</li>
+        <li><b>Category:</b> {{ x[8] }}</li>
+        <li><b>Price:</b> ${{ x[7] }}</li>
+        <img src="{{ x[9] }}" alt="" style="width: 704px; height: 50%;"></li>
+    </div>
+    {% endfor %}
+</section>
+
+<div class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</div>
+    
+
+{% endblock %}

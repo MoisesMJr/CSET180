@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% for x in name %}
+    <div class="proddiv">
+        <li><b>Username:</b> {{ x[0] }}</li>
+        <li><b>Vendor ID:</b> {{ x[1] }}</li>
+        <li><b>Product ID:</b> {{ x[3] }}</li>
+        <li><b>Title:</b> {{ x[4] }}</li>
+        <li><b>Description:</b> {{ x[5] }}</li>
+        <li><b>Color:</b> {{ x[9] }}</li>
+        <li><b>Warranty Period:</b> {{ x[5] }} days.</li>
+        <li><b>Inventory:</b> {{ x[6] }}</li>
+        <li><b>Category:</b> {{ x[8] }}</li>
+        <li><b>Price:</b> ${{ x[7] }}</li>
+        <img src="{{ x[10] }}" alt="" style="width: 704px; height: 50%;"></li>
+    </div>
+        {% endfor %}
+
+
+Add new products
+<section class="addProd">
+    <form action="/vendor" method="POST" >
+        <label>Title:</label><br>
+        <input type="text" name="title"><br>
+    
+        <label>Description:</label><br>
+        <input type="text" name="description"><br>
+    
+        <label>Image URL:</label><br>
+        <input type="text" name="imgurl"><br>
+    
+        <label>Warranty Period:</label><br>
+        <input type="number" name="warranty"><br>
+    
+        <label>Category:</label><br>
+        <input type="text" name="category"><br>
+    
+        <label>Color:</label><br>
+        <input type="text" name="color"><br>
+    
+        <label>Number in Inventory:</label><br>
+        <input type="number" name="numinv"><br>
+    
+        <label>Price:</label><br>
+        <input type="number" name="price"><br>
+    
+        <button type="submit">Submit</button><br>
+    </form>
+</section>
+
+<form action="/logout" method="POST">
+<button type="submit">Logout</button>
+
+{% endblock %}
