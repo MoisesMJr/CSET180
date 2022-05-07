@@ -96,12 +96,40 @@
                 <input type="submit" name="search" class="submit" value="Search">
             </form>
         </div>
+        <div class="discount">
+            <h3>Discount Products</h3>
+            <form action="/discount" method="POST" class="aform">
+                <p>Product ID:</p>
+                <input type="number" name="dpid" class="search" placeholder="Search by name">
+                <input type="submit" name="dpid" class="submit" value="Search"><br>
+
+                <label for="discount">Discount amount:</label>
+                <select id="discount" name="discount">
+                    <option value="none" selected="selected">none</option>
+                    <option value=".9">10%</option>
+                    <option value=".8">20%</option>
+                    <option value=".7">30%</option>
+                    <option value=".6">40%</option>
+                    <option value=".5">50%</option>
+                    <option value=".4">60%</option>
+                    <option value=".3">70%</option>
+                    <option value=".2">80%</option>
+                    <option value=".1">90%</option>
+                </select><br>
+
+                <p>End date:</p>
+                <input type="date" name="end_date" class="search">
+                <input type="submit" class="submit" value="Submit changes">
+            </form>
+        </div>
+
     </div>
+
     <div>
-    <form action="/admin" method="GET">
-    <button type="submit">Clear search</button>
-    </form>
-</div>
+        <form action="/admin" method="GET">
+        <button type="submit">Clear search</button>
+        </form>
+    </div>
 
 </section><br>
 
@@ -109,17 +137,24 @@
 
         {% for x in name %}
     <div class="proddiv">
-        <li><b>Username:</b> {{ x[0] }}</li>
+        <li><b>Username:</b> {{ x[2] }}</li>
         <li><b>Vendor ID:</b> {{ x[1] }}</li>
-        <li><b>Product ID:</b> {{ x[3] }}</li>
-        <li><b>Title:</b> {{ x[4] }}</li>
-        <li><b>Description:</b> {{ x[5] }}</li>
-        <li><b>Color:</b> {{ x[9] }}</li>
+        <li><b>Product ID:</b> {{ x[0] }}</li>
+        <li><b>Title:</b> {{ x[3] }}</li>
+        <li><b>Description:</b> {{ x[4] }}</li>
+        <li><b>Color:</b> {{ x[10] }}</li>
         <li><b>Warranty Period:</b> {{ x[5] }} days.</li>
         <li><b>Inventory:</b> {{ x[6] }}</li>
         <li><b>Category:</b> {{ x[8] }}</li>
         <li><b>Price:</b> ${{ x[7] }}</li>
-        <img src="{{ x[10] }}" alt="" style="width: 704px; height: 50%;"></li>
+        <li><b>Discounted Price:</b> ${{ '%0.2f' % x[13]|float }}</li>
+        {% if x[13] > 0 %}
+            {% set disc_price = x[7]-x[13] %}
+            <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+        {% else %}
+            <li><b>Amount Saved:</b> $0 </li>
+        {% endif %}
+        <img src="{{ x[9] }}" alt="" style="width: 704px; height: 50%;"></li>
     </div>
         {% endfor %}
 
@@ -138,11 +173,17 @@
         <li><b>Inventory:</b> {{ x[6] }}</li>
         <li><b>Category:</b> {{ x[8] }}</li>
         <li><b>Price:</b> ${{ x[7] }}</li>
+        <li><b>Discounted Price:</b> ${{ '%0.2f' % x[13]|float }}</li>
+        {% if x[13] > 0 %}
+            {% set disc_price = x[7]-x[13] %}
+            <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+        {% else %}
+            <li><b>Amount Saved:</b> $0 </li>
+        {% endif %}
         <img src="{{ x[9] }}" alt="" style="width: 704px; height: 50%;"></li>
     </div>
     {% endfor %}
 </section>
-
 <div class="logout">
     <form action="/logout" method="POST">
     <button type="submit">Logout</button>

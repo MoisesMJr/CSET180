@@ -31,27 +31,49 @@
 <section class="products">
     {% for y in name %}
     <div class="proddiv">
-        <li>{{ y[3] }}</li>
-        <li>{{ y[8] }}</li>
-        <li>{{ y[4] }}</li>
-        <li>{{ y[7] }}</li>
-        <img src="{{ y[10] }}" alt="" style="width: 704px; height: 50%;">
-        <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+         <li><b>Title:</b> {{ y[3] }}</li>
+        <li><b>Category:</b> {{ y[8] }}</li>
+        <li><b>Description:</b> {{ y[4] }}</li>
+        <li><b>Price:</b> ${{ y[7] }}</li>
+        <li><b>Discounted Price:</b> ${{ '%0.2f' % y[13]|float }}</li>
+        {% if y[13] > 0 %}
+            {% set disc_price = y[7]-y[13] %}
+            <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+        {% else %}
+            <li><b>Amount Saved:</b> $0 </li>
+        {% endif %}
+        <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
+            <form action="setcart" method="post">
+                <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+            </form>
     </div>
         {% endfor %}
 
         {% for y in allproducts %}
     <div class="proddiv">
-        <li>{{ y[2] }}</li>
-        <li>{{ y[7] }}</li>
-        <li>{{ y[3] }}</li>
-        <li>{{ y[6] }}</li>
-        <img src="{{ y[8] }}" alt="" style="width: 704px; height: 50%;">
-        <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+        <li><b>Title:</b> {{ y[3] }}</li>
+        <li><b>Category:</b> {{ y[8] }}</li>
+        <li><b>Description:</b> {{ y[4] }}</li>
+        <li><b>Price:</b> ${{ y[7] }}</li>
+        <li><b>Discounted Price:</b> ${{ '%0.2f' % y[13]|float }}</li>
+        {% if y[13] > 0 %}
+            {% set disc_price = y[7]-y[13] %}
+            <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+        {% else %}
+            <li><b>Amount Saved:</b> $0 </li>
+        {% endif %}
+        <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
+            <form action="setcart" method="post">
+                <input type="button" value="Add to cart" title="Add to cart" name="addCart">
+            </form>
     </div>    
         {% endfor %}
 </section>
+<section>
+    <p>Cart:</p>
+</section>
 
-
-<button type="submit" formaction="/logout">Logout</button>
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
 {% endblock %}
