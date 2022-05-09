@@ -124,6 +124,11 @@ hr {
   text-align: center;
   max-width: 1200px;
 }
+.cart {
+  display: block;
+
+}
+
 /* footer  */
 footer {
   background: #333;
