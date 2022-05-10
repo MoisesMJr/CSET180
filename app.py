@@ -58,7 +58,7 @@ def post_register():
                           f"values('{username}', '{firstname}', '{lastname}', '{email}', '{hash_password}')"))
         conn.execute(text(f"update currentuser set id = (select id from users where username = '{username}'), "
                           f"username = '{username}', type = (select type from users where username = '{username}')"))
-        return redirect(url_for('/main'))
+        return redirect(url_for('get_main'))
 # ---------------------------------------------
 # login account
 

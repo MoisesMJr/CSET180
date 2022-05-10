@@ -136,23 +136,37 @@
         {% endfor %}
 </section>
 <section class="cart">
-    <p>Cart:</p>
-    {% for y in cart %}
-    <div class="cartdiv">
-        <p><b>Title:</b> {{ y[2] }}</p>
-        {% if y[5] == 0 %}
-            <p><b>Price:</b> ${{ y[3] }}</p>
-        {% else %}
-            <p><b>Discounted Price:</b> ${{ '%0.2f' % y[5]|float }}</p>
-            {% if y[5] > 0 %}
-                {% set disc_price = y[3]-y[5] %}
-                <p><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</p>
+    {% set total = [] %}
+    <button type="button" onclick="openCart()">Cart:</button>
+    <div id="cart-container">
+        {% for y in cart %}
+        <div class="cartdiv">
+            <p><b>Title:</b> {{ y[2] }}</p>
+            div{% if y[5] == 0 %}
+                <p><b>Price:</b> ${{ y[3] }}</p>
+                {{ total.append( y[3] ) }}
             {% else %}
-                <p><b>Amount Saved:</b> $0 </p>
+                <p><b>Discounted Price:</b> ${{ '%0.2f' % y[5]|float }}</p>
+                {{ total.append( y[5] ) }}
+                {% if y[5] > 0 %}
+                    {% set disc_price = y[3]-y[5] %}
+                    <p><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</p>
+                {% else %}
+                    <p><b>Amount Saved:</b> $0 </p>
+                {% endif %}
             {% endif %}
-        {% endif %}
+        </div><br>
+        {% endfor %}
+        <p>Total: </p>
+
+        {% set totalcost = namespace(value=0) %}
+
+        {% for i in total %}
+            {% set totalcost.value = totalcost.value + i %}
+        {% endfor %}
+
+        <p>{{ '%0.2f' % totalcost.value }}</p>
     </div>
-    {% endfor %}
 </section>
 
     <form action="/logout" method="post">
