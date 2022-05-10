@@ -142,7 +142,7 @@
         {% for y in cart %}
         <div class="cartdiv">
             <p><b>Title:</b> {{ y[2] }}</p>
-            div{% if y[5] == 0 %}
+            {% if y[5] == 0 %}
                 <p><b>Price:</b> ${{ y[3] }}</p>
                 {{ total.append( y[3] ) }}
             {% else %}
@@ -166,6 +166,11 @@
         {% endfor %}
 
         <p>{{ '%0.2f' % totalcost.value }}</p>
+
+        <form action="/checkout" method="post">
+<!--            <input type="text" value="" title="Check out" name="cpid" style="display:none">-->
+            <input type="submit" value="Check out" title="Check out" name="checkout">
+        </form>
     </div>
 </section>
 

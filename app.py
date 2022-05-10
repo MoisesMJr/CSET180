@@ -493,10 +493,27 @@ def post_cart():
     cart = conn.execute(
         text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products "
              f"natural join discounts natural join cart where cart_id = {curr}")).all()
-    # conn.execute(text(f"update products set nOfItems = nOfItems - 1 where pid = {cpid}"))
     print(f"test test test {cart}", file=sys.stderr)
     print('This is error output', file=sys.stderr)
     return redirect(url_for('get_main', cart=cart, curr=curr))
+# ---------------------------------------------
+# checkout
+
+
+@app.route('/checkout', methods=['POST'])
+def post_checkout():
+    cpid = request.form['cpid']
+    curr = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    orders = conn.execute(
+        text(
+            f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products natural"
+            f" join discounts join users on users.id = cart.cart_id where cart_id = {curr}")).all()
+    for i in orders:
+        pid = i[0]
+
+        conn.execute(text(f"insert into orders(pid) values({pid})"))
+    conn.execute(text(f"update products set nOfItems = nOfItems - 1 where pid = {cpid}"))
+    return render_template('main.html')
 
 
 if __name__ == '__main__':
