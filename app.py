@@ -500,20 +500,61 @@ def post_cart():
 # checkout
 
 
+# @app.route('/checkoutpage', methods=['POST'])
+# def post_checkoutpage():
+#     return redirect(url_for('get_checkout'))
+
+
+# @app.route('/checkout', methods=['GET'])
+# def get_checkout():
+#     curr = conn.execute(text(f"select id from currentuser")).all()[0][0]
+#     cart = conn.execute(
+#         text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products "
+#              f"natural join discounts natural join cart where cart_id = {curr}")).all()
+#     return redirect(url_for('get_main', cart=cart, curr=curr))
+
+
 @app.route('/checkout', methods=['POST'])
 def post_checkout():
-    cpid = request.form['cpid']
     curr = conn.execute(text(f"select id from currentuser")).all()[0][0]
     orders = conn.execute(
         text(
-            f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products natural"
-            f" join discounts join users on users.id = cart.cart_id where cart_id = {curr}")).all()
+            f"select products.pid, cart_id, title, price, discount_amt, (round(price*discount_amt)) as disc_price "
+            f"from products natural join discounts inner join cart on cart.pid = products.pid where cart_id = {curr}")).all()
+    conn.execute(text(f"insert into orders(id) values({curr})"))
     for i in orders:
         pid = i[0]
+        cart_id = i[1]
+        title = i[2]
+        price = i[3]
+        discount_amt = i[4]
+        disc_price = i[5]
+        price_paid = 0
+        if disc_price == 0:
+            price_paid = price
+        elif disc_price > 0:
+            price_paid = disc_price
+        oid = conn.execute(text(f"select max(oid) from orders")).all()[0][0]
+        conn.execute(text(f"insert into listOfItems(oid, pid, price_paid) values({oid}, {pid}, {price_paid})"))
+        conn.execute(text(f"update products set nOfItems = nOfItems - 1 where pid = {pid}"))
+        conn.execute(text(f"delete from cart where cart_id = {cart_id}"))
+    return redirect(url_for('get_placedOrder'))
+# ---------------------------------------------
+# placed order page
 
-        conn.execute(text(f"insert into orders(pid) values({pid})"))
-    conn.execute(text(f"update products set nOfItems = nOfItems - 1 where pid = {cpid}"))
-    return render_template('main.html')
+
+@app.route('/placedOrder', methods=['GET'])
+def get_placedOrder():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    cart_id = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    placed_order = conn.execute(
+        text(
+            f"select products.pid, users.id, vendor_id, orders.oid, username, title, description, warranty_pd, "
+            f"nOfItems, price, category, imageURL, color, discount_amt, end_date, orders.date, "
+            f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid from products natural join discounts "
+            f"natural join images natural join colors join listOfItems using(pid) join orders using (oid) join users "
+            f"using (id) where id = {cart_id}")).all()
+    return render_template('placedOrder.html', placed_order=placed_order, curr=curr)
 
 
 if __name__ == '__main__':

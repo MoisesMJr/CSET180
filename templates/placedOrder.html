@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% for y in placed_order %}
+<p><b>Product ID:</b></p> {{ y[0] }}
+<p><b>Vendor ID: </b></p> {{ y[1] }}
+<p><b>Vendor Name:</b></p> {{ y[2] }}
+<p><b>Title:</b></p> {{ y[3] }}
+<p><b>Description:</b></p> {{ y[4] }}
+<p><b>Warranty Period in days:</b></p> {{ y[5] }}
+<p><b>Regular Price:</b></p> {{ y[7] }}
+<p><b>Discounted Price:</b></p> {{ y[13] }}
+<p><b>Category:</b></p> {{ y[8] }}
+<p><b>Color:</b></p> {{ y[10] }}
+<p><b>Image:</b></p><img src="{{ y[11] }}" alt="" style="width: 704px; height: 50%;">
+
+{% endfor %}
+
+    <form action="/main" method="post">
+        <button type="submit">Back to home page</button>
+    </form><br>
+
+
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+{% endblock %}

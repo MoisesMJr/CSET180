@@ -59,7 +59,11 @@
             <form action="/main" method="GET">
             <button type="submit" >Clear search</button>
             </form>
-        </div>
+        </div><br>
+
+    <form action="/placedOrder" method="get">
+        <button type="submit">Go to placed orders</button>
+    </form><br>
 </section>
 
 <section class="products">
@@ -101,7 +105,7 @@
                 <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
             {% else %}
                 <li><b>Amount Saved:</b> $0 </li>
-            {% endif %}
+        {% endif %}
         {% endif %}
         <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
         <form action="cart" method="post">
@@ -135,10 +139,10 @@
     </div>
         {% endfor %}
 </section>
-<section class="cart">
+<section class="cart" id="cart">
     {% set total = [] %}
     <button type="button" onclick="openCart()">Cart:</button>
-    <div id="cart-container">
+    <div id="cart-container" style="display: none">
         {% for y in cart %}
         <div class="cartdiv">
             <p><b>Title:</b> {{ y[2] }}</p>
@@ -167,11 +171,19 @@
 
         <p>{{ '%0.2f' % totalcost.value }}</p>
 
-        <form action="/checkout" method="post">
-<!--            <input type="text" value="" title="Check out" name="cpid" style="display:none">-->
-            <input type="submit" value="Check out" title="Check out" name="checkout">
-        </form>
+        <div class="checkout">
+            <form action="/checkout" method="post">
+                <input type="submit" value="Check out" title="Check out" id="gtc" name="checkout">
+            </form>
+        </div>
     </div>
+
+   <!-- <div class="checkout" id="checkout">
+       <form action="/checkout" method="post">
+               <input type="submit" value="Check out" title="Check out" name="checkout">
+       </form>
+   </div> -->
+
 </section>
 
     <form action="/logout" method="post">
