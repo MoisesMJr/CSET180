@@ -142,11 +142,14 @@ def post_vendor():
 @app.route('/admin', methods=['GET'])
 def get_admin():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
-    allproducts = conn.execute(
-        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
-             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
-             f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
-    return render_template('admin.html', allproducts=allproducts, curr=curr)
+    if curr == "admin":
+        allproducts = conn.execute(
+            text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+                 f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
+        return render_template('admin.html', allproducts=allproducts, curr=curr)
+    else:
+        return redirect(url_for('get_login'))
 
 
 @app.route('/admin', methods=['POST'])
@@ -345,6 +348,48 @@ def post_discount():
         conn.execute(text(f"update discounts set discount_amt = {discount}, end_date = '{end_date}' where pid = {dpid}"))
     return render_template('admin.html', allproducts=allproducts)
 # ---------------------------------------------
+# status of order
+
+
+@app.route('/status', methods=['GET'])
+def get_status():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    currid = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    pending_order = conn.execute(
+        text(f"select products.pid, users.id, vendor_id, orders.oid, username, title, description, warranty_pd, "
+             f"nOfItems, price, category, imageURL, color, discount_amt, (round((((100/discount_amt)*"
+             f"(discount_amt/100)) - discount_amt) * 100)) as disc_percent, end_date, orders.date, "
+             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid, status from products natural join "
+             f"discounts natural join images natural join colors join listOfItems using(pid) join orders using (oid) "
+             f"join users using (id) where vendor_id = {currid} and status = 'pending'")).all()
+    confirmed_orders = conn.execute(
+        text(f"select products.pid, users.id, vendor_id, orders.oid, username, title, description, warranty_pd, "
+             f"nOfItems, price, category, imageURL, color, discount_amt, (round((((100/discount_amt)*"
+             f"(discount_amt/100)) - discount_amt) * 100)) as disc_percent, end_date, orders.date, "
+             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid, status from products natural join "
+             f"discounts natural join images natural join colors join listOfItems using(pid) join orders using (oid) "
+             f"join users using (id) where vendor_id = {currid} and status <> 'pending'")).all()
+    return render_template('receivedOrders.html', pending_order=pending_order, confirmed_orders=confirmed_orders, curr=curr)
+
+
+@app.route('/status', methods=['POST'])
+def post_status():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    currid = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    changestatus = request.form['changestatus']
+    oid = request.form['oid']
+    pending_order = conn.execute(
+        text(f"select products.pid, users.id, vendor_id, orders.oid, username, title, description, warranty_pd, "
+             f"nOfItems, price, category, imageURL, color, discount_amt, (round((((100/discount_amt)*"
+             f"(discount_amt/100)) - discount_amt) * 100)) as disc_percent, end_date, orders.date, "
+             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid, status from products natural join "
+             f"discounts natural join images natural join colors join listOfItems using(pid) join orders using (oid) "
+             f"join users using (id) where vendor_id = {currid} and status = 'pending'")).all()
+    # for i in pending_order:
+    #     oid = i.oid
+    conn.execute(text(f"update orders set status = '{changestatus}' where oid = {oid}"))
+    return render_template('receivedOrders.html', pending_order=pending_order, curr=curr)
+# -------------------------------------------
 # customer/main account
 
 
@@ -359,7 +404,7 @@ def get_main():
                              f"natural join images on users.id = products.vendor_id where title like "
                              f"'%{nsearch}%'")).all()
     cart = conn.execute(
-        text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products "
+        text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price, item_num from products "
              f"natural join discounts natural join cart where cart_id = {currid}")).all()
     allproducts = conn.execute(
         text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
@@ -491,27 +536,22 @@ def post_cart():
     curr = conn.execute(text(f"select id from currentuser")).all()[0][0]
     conn.execute(text(f"insert into cart (cart_id, pid) values ({curr}, {cpid})"))
     cart = conn.execute(
-        text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products "
-             f"natural join discounts natural join cart where cart_id = {curr}")).all()
-    print(f"test test test {cart}", file=sys.stderr)
-    print('This is error output', file=sys.stderr)
+        text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price, item_num from "
+             f"products natural join discounts natural join cart where cart_id = {curr}")).all()
     return redirect(url_for('get_main', cart=cart, curr=curr))
 # ---------------------------------------------
+# remove item from cart
+
+
+@app.route('/removecart', methods=['POST'])
+def post_removecart():
+    item_num = request.form['removecart']
+    conn.execute(text(f"delete from cart where item_num = {item_num}"))
+    return redirect(url_for('get_main'))
+
+
+# ---------------------------------------------
 # checkout
-
-
-# @app.route('/checkoutpage', methods=['POST'])
-# def post_checkoutpage():
-#     return redirect(url_for('get_checkout'))
-
-
-# @app.route('/checkout', methods=['GET'])
-# def get_checkout():
-#     curr = conn.execute(text(f"select id from currentuser")).all()[0][0]
-#     cart = conn.execute(
-#         text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price from products "
-#              f"natural join discounts natural join cart where cart_id = {curr}")).all()
-#     return redirect(url_for('get_main', cart=cart, curr=curr))
 
 
 @app.route('/checkout', methods=['POST'])
@@ -553,8 +593,15 @@ def get_placedOrder():
             f"nOfItems, price, category, imageURL, color, discount_amt, end_date, orders.date, "
             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid from products natural join discounts "
             f"natural join images natural join colors join listOfItems using(pid) join orders using (oid) join users "
-            f"using (id) where id = {cart_id}")).all()
+            f"using (id) where id = {cart_id} order by oid desc")).all()
     return render_template('placedOrder.html', placed_order=placed_order, curr=curr)
+# ---------------------------------------------
+# reviews
+
+
+@app.route('review', methods=['POST'])
+def post_review():
+    return
 
 
 if __name__ == '__main__':

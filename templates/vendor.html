@@ -43,7 +43,12 @@
         <form action="/edit" method="POST" class="aform">
             <h3>Update Products</h3>
             <label>Product ID:</label>
-            <input type="number" name="pid" placeholder="Product ID" class="input_field">
+            <select name="pid">
+                <option disabled selected>Product ID:</option>
+                {% for p in products %}
+                <option value="{{ p.pid }}">{{ p.pid }}</option>
+                {% endfor %}
+            </select>
 
             <label>Title:</label>
             <input type="text" name="title">
@@ -103,8 +108,12 @@
         <form action="/vendor" method="GET">
             <button type="submit">Clear search</button>
         </form>
-    </div>
+    </div><br>
+    <form action="/status" method="get">
+        <button type="submit">Received orders</button>
+    </form><br>
 </section><br>
+
 
 <section class="products">
 
@@ -129,8 +138,9 @@
     </div>
     {% endfor %}
 </section>
-
-<form action="/logout" method="POST">
-<button type="submit">Logout</button>
-</form>
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section>
 {% endblock %}

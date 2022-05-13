@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  /* box-sizing: border-box; */
   /* background-color: cornflowerblue; */
 }
 /* header */
@@ -106,6 +107,22 @@ hr {
   border: 2px solid black;
   width: 44rem;
   height: 750px;
+}
+.products1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  justify-items: center;
+}
+.proddiv1 {
+  border: 2px solid black;
+  width: 20rem;
+  /* height: 750px; */
+}
+.prodformdiv {
+  background-color: #777;
+  width: 90%;
+  margin: 0 auto;
 }
 
 .proddiv img {

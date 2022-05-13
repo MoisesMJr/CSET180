@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block body %}
+
+<form action="/vendor" method="get">
+  <button type="submit">Back to vendor page</button>
+</form>
+<br />
+
+<section class="products1">
+  <h3>Pending Orders:</h3><br>
+  {% for p in pending_order %}
+  <div class="proddiv1">
+    <form action="/status" method="post" class="prodformdiv">
+        <p><b>Product ID:</b> {{ p.pid }}</p>
+        <input value="{{ p.oid }}" name="oid" style="display:none">
+        <p><b>Order ID:</b> {{ p.oid }}</p> 
+        <p><b>User purchasing:</b> {{ p.username }}</p>
+        <p><b>Product:</b> {{ p.title }}</p>
+        <p><b>Warranty Period:</b> {{ p.warranty_pd }}</p>
+        <p><b>Original Price:</b> ${{ p.price }}</p> 
+        {% if p.discount_amt == 0 %}
+        <p><b>Discount percentage:</b> {{ p.discount_amt }}% </p>
+        {% else %}
+        <p><b>Discount percentage:</b> {{ p.disc_percent }}% off</p> 
+        {% endif %}
+        <p><b>Discount price:</b> ${{ p.disc_price }}</p>
+        <p><b>Price Paid:</b> ${{ p.price_paid }}</p>
+        <p><b>Discount end date:</b> {{ p.end_date }}</p>
+        <p><b>Date ordered:</b> {{ p.date }}</p><br /><br />
+        <select name="changestatus">
+          <option disabled selected>Pending:</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="handed to delivery partner">Handed to delivery partner</option>
+          <option value="shipped">Shipped</option>
+        </select>
+        <input type="submit" value="Submit" class="submit" /><br /><br />
+        {% endfor %}
+      </form>
+  </div>
+</section><br>
+
+<section class="products1">
+  <h3>All Orders:</h3><br>
+  {% for p in confirmed_orders %}
+  <div class="proddiv1">
+    <form action="/status" method="post" class="prodformdiv">
+        <p><b>Product ID:</b> {{ p.pid }}</p>
+        
+        <p><b>Order ID:</b> {{ p.oid }}</p>
+        
+        <p><b>User purchasing:</b> {{ p.username }}</p>
+        
+        <p><b>Product:</b> {{ p.title }}</p>
+        
+        <p><b>Warranty Period:</b> {{ p.warranty_pd }}</p>
+        <p><b>Original Price:</b> ${{ p.price }} </p>
+        {% if p.discount_amt == 0 %}
+        <p><b>Discount percentage:</b> {{ p.discount_amt }}% </p>
+        {% else %}
+        <p><b>Discount percentage:</b> {{ p.disc_percent }}% off</p> 
+        {% endif %}
+        <p><b>Discount price:</b> ${{ p.disc_price }}</p>
+        <p><b>Price Paid:</b> ${{ p.price_paid }}</p>
+        <p><b>Discount end date:</b> {{ p.end_date }}</p>
+        <p><b>Date ordered:</b> {{ p.date }}</p><br>
+    </form>
+    
+      
+  </div>{% endfor %}
+</section>
+
+{% endblock %}

@@ -1,20 +1,37 @@
 {% extends "base.html" %}
 {% block body %}
 
+<form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+</form><br>
+
+<section class="products">
 {% for y in placed_order %}
-<p><b>Product ID:</b></p> {{ y[0] }}
-<p><b>Vendor ID: </b></p> {{ y[1] }}
-<p><b>Vendor Name:</b></p> {{ y[2] }}
-<p><b>Title:</b></p> {{ y[3] }}
-<p><b>Description:</b></p> {{ y[4] }}
-<p><b>Warranty Period in days:</b></p> {{ y[5] }}
-<p><b>Regular Price:</b></p> {{ y[7] }}
-<p><b>Discounted Price:</b></p> {{ y[13] }}
-<p><b>Category:</b></p> {{ y[8] }}
-<p><b>Color:</b></p> {{ y[10] }}
-<p><b>Image:</b></p><img src="{{ y[11] }}" alt="" style="width: 704px; height: 50%;">
+<div class="proddiv">
+    <div class="prodformdiv1">
+        <p><b>Product ID:</b> {{ y[0] }}</p>
+        <p><b>ID:</b>{{ y[1] }}</p>
+        <p><b>Vendor ID: </b> {{ y[2] }}</p>
+        <p><b>Order ID: </b> {{ y[3] }}</p>
+        <p><b>Vendor ID:</b> {{ y[2] }}</p>
+        <p><b>Title:</b> {{ y[3] }}</p>
+        <p><b>Description:</b> {{ y[4] }}</p>
+        <p><b>Warranty Period in days:</b> {{ y[5] }}</p>
+        <p><b>Regular Price:</b> {{ y[7] }}</p>
+        <p><b>Discounted Price:</b> {{ y[13] }}</p>
+        <p><b>Category:</b> {{ y[8] }}</p>
+        <p><b>Color:</b> {{ y[10] }}</p>
+        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" alt="" style="width: 704px; height: 50%;">
+            <div id="reviewtext">
+                <form action="/review">
+                    <input type="text" name="reviewtext">
+                </form>
+            </div>
+    </div>
+</div>
 
 {% endfor %}
+</section>
 
     <form action="/main" method="post">
         <button type="submit">Back to home page</button>

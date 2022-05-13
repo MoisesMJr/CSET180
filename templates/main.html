@@ -144,7 +144,7 @@
     <button type="button" onclick="openCart()">Cart:</button>
     <div id="cart-container" style="display: none">
         {% for y in cart %}
-        <div class="cartdiv">
+        <form action="/removecart" method="post" class="cartdiv">
             <p><b>Title:</b> {{ y[2] }}</p>
             {% if y[5] == 0 %}
                 <p><b>Price:</b> ${{ y[3] }}</p>
@@ -159,8 +159,12 @@
                     <p><b>Amount Saved:</b> $0 </p>
                 {% endif %}
             {% endif %}
-        </div><br>
+            <input type="text" value="{{ y.item_num }}" title="Remove from cart" name="removecart" style="display:none">
+            <input type="submit" value="Remove from cart" title="Remove from cart">
+        </form><br>
         {% endfor %}
+
+
         <p>Total: </p>
 
         {% set totalcost = namespace(value=0) %}
@@ -173,16 +177,10 @@
 
         <div class="checkout">
             <form action="/checkout" method="post">
-                <input type="submit" value="Check out" title="Check out" id="gtc" name="checkout">
+                <input type="submit" value="Place Order" title="Check out" id="gtc" name="checkout">
             </form>
         </div>
     </div>
-
-   <!-- <div class="checkout" id="checkout">
-       <form action="/checkout" method="post">
-               <input type="submit" value="Check out" title="Check out" name="checkout">
-       </form>
-   </div> -->
 
 </section>
 
