@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block body %}
+<br>
+<section class="returns">
+    <div class="returndiv">
+        <h3 class="aform4">File a complaint</h3><br>
+        <form action="/returns" method="POST" class="aform4">
+            <label><b>Username:</b></label>
+            <input type="text" name="username" placeholder="Enter your username.." required>
+            <h3 style="color: red">{{ notuser }}</h3><br>
+
+            <label><b>Product Name:</b></label>
+            <input type="text" name="return_title" placeholder="Enter name of product.." required>
+            <h3 style="color: red">{{ notours }}</h3><h3 style="color: red">{{ notyours }}</h3><br>
+
+            <label><b>Description:</b></label>
+            <textarea maxlength="250" placeholder="Write something.." id= "return_desc" name="return_desc" style="width: 100%; 
+            height: 150px;
+            padding: 12px 10px;
+            box-sizing: border-box;
+            border: 2px solid black;
+            border-radius: 4px;" required></textarea><br>
+            
+            <label for="return_demand"><b>Desired Resolution:</b></label>
+            <select id="return_demand" name="return_demand" required>
+                <option value="none" selected="selected">none</option>
+                <option value="return">Return</option>
+                <option value="refund">Refund</option>
+                <option value="warr_claim">File a warranty claim</option>
+            </select><br>
+            <input type="submit" name="search" class="aform2" value="Search">
+        </form>
+    </div><br>
+    
+    <div class="reviewcomplaint">
+        <h3>{{ thanks }}</h3>
+    </div>
+</section>
+
+
+
+
+
+
+Returns -
+One of the admins will review the request and decide whether it is a valid one. If not, the complaint is rejected.
+So complaint status goes like this: pending -> rejected / confirmed -> processing -> complete.
+
+
+{% endblock %}

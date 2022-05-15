@@ -21,7 +21,7 @@
         <p><b>Discounted Price:</b> {{ y[13] }}</p>
         <p><b>Category:</b> {{ y[8] }}</p>
         <p><b>Color:</b> {{ y[10] }}</p>
-        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" onclick="openReviewText()" alt="pic id code" style="width: 704px; height: 50%;" role="button">
+        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" onclick="openReviewText()" alt="pic id code" style="width: 612px; height: 50%;" role="button">
             <div id="reviewtext" class="prodformdiv1">
                 <form action="/review" class="orderform" method="post">
                     <input type="text" value="{{ y.title }}" name="title" style="display:none">
@@ -43,14 +43,16 @@
 </div>
 
 {% endfor %}
-</section>
+</section><br>
 
-    <form action="/main" method="post">
-        <button type="submit">Back to home page</button>
-    </form><br>
+<form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+</form><br>
 
 
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
     </form>
+</section><br>
 {% endblock %}

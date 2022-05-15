@@ -385,8 +385,6 @@ def post_status():
              f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid, status from products natural join "
              f"discounts natural join images natural join colors join listOfItems using(pid) join orders using (oid) "
              f"join users using (id) where vendor_id = {currid} and status = 'pending'")).all()
-    # for i in pending_order:
-    #     oid = i.oid
     conn.execute(text(f"update orders set status = '{changestatus}' where oid = {oid}"))
     return render_template('receivedOrders.html', pending_order=pending_order, curr=curr)
 # -------------------------------------------
@@ -613,8 +611,6 @@ def post_placedOrder():
             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid from products natural join discounts "
             f"natural join images natural join colors join listOfItems using(pid) join orders using (oid) join users "
             f"using (id) where id = {cart_id} order by oid desc")).all()
-    # car_review = conn.execute(
-    #     text(f"select description, rating from reviews where id = {cart_id}")).all()
     return render_template('placedOrder.html', placed_order=placed_order, curr=curr)
 # ---------------------------------------------
 # reviews
@@ -664,6 +660,60 @@ def post_reviewpage():
         return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
     else:
         return redirect(url_for('get_reviewpage'))
+# ---------------------------------------------
+# returns/complaints
+
+
+@app.route('/returns', methods=['GET'])
+def get_returns():
+    return render_template('returns.html')
+
+
+@app.route('/returns', methods=['POST'])
+def post_returns():
+    title = request.form['return_title']
+    return_desc = request.form['return_desc']
+    return_demand = request.form['return_demand']
+    username = request.form['username']
+    usernames = conn.execute(text(f"select * from users where username = '{username}'")).all()
+    titles = conn.execute(text(f"select * from products where title = '{title}'")).all()
+    bought = conn.execute(text(f"select users.id, username, orders.oid, title from users join orders on users.id = "
+                               f"orders.id join listOfItems on orders.oid = listOfItems.oid join products on "
+                               f"listOfItems.pid = products.pid where username = '{username}' and title = '{title}'")).all()
+    if len(usernames) == 0:
+        notuser = "You must be a previous customer to file a complaint. This username does not exist."
+        return render_template('returns.html', notuser=notuser)
+    elif len(titles) == 0:
+        notours = "This is not one of our products."
+        return render_template('returns.html', notours=notours)
+    elif len(bought) == 0:
+        notyours = "You can only return products that you have purchased."
+        return render_template('returns.html', notyours=notyours)
+    else:
+        conn.execute(
+            text(f"insert into complaints (username, title, description, demand) values ('{username}', '{title}', "
+                 f"'{return_desc}', '{return_demand}')"))
+        thanks = "Thank you for your feedback."
+        return render_template('returns.html', thanks=thanks)
+# ---------------------------------------------
+# returns/complaints
+
+
+@app.route('/returnrequests', methods=['GET'])
+def get_returnrequests():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    requests = conn.execute(text(f"select * from complaints")).all()
+    return render_template('returnrequests.html', requests=requests, curr=curr)
+
+
+@app.route('/returnrequests', methods=['POST'])
+def post_returnrequests():
+    requests = conn.execute(text(f"select * from complaints")).all()
+    change_req_status = request.form['change_req_status']
+    for req in requests:
+        date = req.date
+        conn.execute(text(f"update complaints set status = {change_req_status} where date = {date}"))
+        return redirect(url_for('get_returnrequests'))
 
 
 if __name__ == '__main__':

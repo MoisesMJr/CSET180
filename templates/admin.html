@@ -123,13 +123,17 @@
             </form>
         </div>
 
-    </div>
+    </div><br>
 
     <div>
         <form action="/admin" method="GET">
         <button type="submit">Clear search</button>
         </form>
-    </div>
+    </div> <br>
+
+    <form action="/returnrequests" method="get">
+        <button type="submit">Return requests</button>
+    </form><br>
 
 </section><br>
 
@@ -154,7 +158,7 @@
         {% else %}
             <li><b>Amount Saved:</b> $0 </li>
         {% endif %}
-        <img src="{{ x[9] }}" alt="" style="width: 704px; height: 50%;"></li>
+        <img src="{{ x[9] }}" alt="" style="width: 612px; height: 50%;"></li>
     </div>
         {% endfor %}
 
@@ -180,15 +184,14 @@
         {% else %}
             <li><b>Amount Saved:</b> $0 </li>
         {% endif %}
-        <img src="{{ x[9] }}" alt="" style="width: 704px; height: 50%;"></li>
+        <img src="{{ x[9] }}" alt="" style="width: 612px; height: 50%;"></li>
     </div>
     {% endfor %}
-</section>
-<div class="logout">
+</section><br>
+<section class="logout">
     <form action="/logout" method="POST">
     <button type="submit">Logout</button>
     </form>
-</div>
-    
+</section><br>
 
 {% endblock %}

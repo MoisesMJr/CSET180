@@ -83,7 +83,7 @@
                 <li><b>Amount Saved:</b> $0 </li>
             {% endif %}
         {% endif %}
-        <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
         <form action="cart" method="post">
             <input type="text" value="{{ y[0] }}" title="Add to cart" name="cpid" style="display:none">
             <input type="submit" value="Add to cart" title="Add to cart" name="addCart">
@@ -107,7 +107,7 @@
                 <li><b>Amount Saved:</b> $0 </li>
         {% endif %}
         {% endif %}
-        <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
         <form action="cart" method="post">
             <input type="text" value="{{ y[0] }}" title="Add to cart" name="cpid" style="display:none">
             <input type="submit" value="Add to cart" title="Add to cart" name="addCart">
@@ -131,7 +131,7 @@
                 <li><b>Amount Saved:</b> $0 </li>
             {% endif %}
         {% endif %}
-        <img src="{{ y[9] }}" alt="" style="width: 704px; height: 50%;">
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
         <form action="cart" method="post">
             <input type="text" value="{{ y[0] }}" title="Add to cart" name="cpid" style="display:none">
             <input type="submit" value="Add to cart" title="Add to cart" name="addCart">
@@ -184,7 +184,9 @@
 
 </section>
 
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
     </form>
+</section><br>
 {% endblock %}

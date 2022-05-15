@@ -31,11 +31,11 @@
           <option value="confirmed">Confirmed</option>
           <option value="handed to delivery partner">Handed to delivery partner</option>
           <option value="shipped">Shipped</option>
-        </select>
-        <input type="submit" value="Submit" class="submit" /><br /><br />
-        {% endfor %}
+        </select> <br><br>
+        <input type="submit" value="Submit" class="submit"><br /><br />
       </form>
   </div>
+  {% endfor %}
 </section><br>
 
 <section class="products1">
@@ -63,9 +63,14 @@
         <p><b>Discount end date:</b> {{ p.end_date }}</p>
         <p><b>Date ordered:</b> {{ p.date }}</p><br>
     </form>
-    
-      
-  </div>{% endfor %}
-</section>
+  </div>
+  {% endfor %}
+</section><br>
 
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section><br>
 {% endblock %}

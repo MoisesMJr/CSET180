@@ -1,36 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
 
- <div class="mainfilter">
-            <h3>Filter Reviews</h3>
-            <form action="/reviewpage" method="POST" class="aform1">
-
-                <label for="timereview">Time:</label>
-                <select id="timereview" name="timereview">
-                    <option value="none" selected="selected">none</option>
-                    <option value="old">Oldest to newest</option>
-                    <option value="new">Newest to oldest</option>
-                </select><br>
-
-                <label for="ratingreview">Rating:</label>
-                <select id="ratingreview" name="ratingreview">
-                    <option value="none" selected="selected">none</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                </select><br>
-                <input type="submit" name="search" class="submit" value="Search">
-            </form>
-        </div><br>
-
 <section class="review">
     <div class="review_area">
         <div class="row">
             <div class="col-lg-6">
                 <div class="left_sec">
-                    <!-- <img src="/static/images/quote.png"> -->
                     <h3>What Our Customers Are Saying</h3>
                 </div>
             </div>
@@ -45,16 +20,26 @@
                         </ol>
                         <div class="carousel-inner">
                           <div class="carousel-item active">
-                            <p> insert a review </p>
-                            <h5>User 1</h5>
+                            {% for r in allreviews %}
+                            <p>{{ r.title }}</p>
+                            <p> {{ r[11] }} </p>
+                            <h5>{{ r[2] }}</h5>
+                            {% endfor %}
                           </div>
                           <div class="carousel-item">
-                            <p> insert a second review </p>
-                            <h5>User 2</h5>
+                            {% for r in allreviews %}
+                            <p>{{ r.title }}</p>
+                            <p> {{ r.description }} </p>
+                            <h5>{{ r.first_name }}</h5>
+                            {% endfor %}
                           </div>
+                          
                           <div class="carousel-item">
-                            <p> insert a third review </p>
-                            <h5>User 3</h5>
+                            {% for r in allreviews %}
+                            <p>{{ r.title }}</p>
+                            <p> {{ r.description }} </p>
+                            <h5>{{ r.first_name }}</h5>
+                            {% endfor %}
                           </div>
                         </div>
                       </div>
@@ -64,10 +49,34 @@
     </div>
 </section>
 
+ <div class="mainfilter1">
+    <h3 class="aform4">Filter Reviews</h3><br>
+    <form action="/reviewpage" method="POST" class="aform4">
+
+        <label for="timereview" style="padding-left: 13%"><b>Time:</b></label>
+        <select id="timereview" name="timereview" class="aform2">
+            <option value="none" selected="selected">none</option>
+            <option value="old">Oldest to newest</option>
+            <option value="new">Newest to oldest</option>
+        </select><br>
+
+        <label for="ratingreview" style="padding-left: 13%"><b>Rating:</b></label>
+        <select id="ratingreview" name="ratingreview" class="aform2">
+            <option value="none" selected="selected">none</option>
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
+        </select><br>
+        <input type="submit" name="search" class="aform2" value="Search">
+    </form>
+</div><br>
 
 
-<h4>All reviews</h4>
-    {% for r in allreviews %}
+<div class="mainfilter1">
+<h3 class="aform4">All reviews</h3>
+{% for r in allreviews %}
     <p>{{ r.title }}</p>
     <p>Review: {{ r.description }}</p>
     <p>{{ r.rating }} stars</p>
@@ -80,6 +89,17 @@
     <p class="rev_container__content">{{ rf.rating }} stars</p>
     <p class="rev_name">{{ rf.first_name }} {{ rf.last_name }} </p> <br>
     {% endfor %}
+</div>
 
+<form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+</form><br>
+
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section><br>
 {% endblock %}
 

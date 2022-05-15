@@ -1,44 +1,46 @@
 {% extends "base.html" %}
 {% block body %}
 
-
-<form action="/register" method="POST">
-
-  <div class="container">
-    <label><b>First Name:</b></label>
-    <input type="text" placeholder="Enter first name" name="firstname" required>
-
-    <label><b>Last Name:</b></label>
-    <input type="text" placeholder="Enter last name" name="lastname" required>
-
-    <label><b>Username:</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
-
-    <label><b>Email:</b></label>
-    <input type="email" placeholder="Enter email" name="email" required>
-
-    <label><b>Password:</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-
-    <button type="submit">Login</button>
+<br>
+<section class="login_section">
+  <form action="/register" method="POST" class="login-form">
+    <h3>Register:</h3><br>
+    <div class="container">
+      <label class="login-tc"><b>First Name:</b></label>
+      <input type="text" class="login-tc" placeholder="Enter first name" name="firstname" required>
   
-  </div><br>
+      <label class="login-tc"><b>Last Name:</b></label>
+      <input type="text" class="login-tc" placeholder="Enter last name" name="lastname" required><br>
+  
+      <label class="login-tc"><b>Username:</b></label>
+      <input type="text" class="login-tc" placeholder="Enter Username" name="username" required>
+  
+      <label class="login-tc" ><b>Email:</b></label>
+      <input type="email" class="login-tc" placeholder="Enter email" name="email" required>
+  
+      <label class="login-tc" ><b>Password:</b></label>
+      <input type="password" class="login-tc" placeholder="Enter Password" name="psw" required><br><br>
+  
+      <button type="submit" class="login-tc" >Login</button>
+    </div><br>
+  </form>
 
-</form>
-<h3>{{ duplicate_name }}</h3><h3>{{ duplicate_email }}</h3>
+  <h3>{{ duplicate_name }}</h3><h3>{{ duplicate_email }}</h3>
+  <div class = "vertical"></div>
 
-<form action="/login" method="post" class="login">
-
-  <div class="container">
-    <label><b>Username or Email:</b></label>
-    <input type="text" placeholder="Enter Username or Email" name="username" required>
-
-    <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-
-    <input type="submit" value="Login">
-  </div>
-</form>
+  <form action="/login" method="post" class="login-form"">
+    <h3>Log-in:</h3>
+    <div class="container">
+      <label class="login-tc"><b>Username or Email:</b></label>
+      <input type="text" class="login-tc" placeholder="Enter Username or Email" name="username" required><br>
+  
+      <label class="login-tc"><b>Password</b></label>
+      <input type="password" class="login-tc" placeholder="Enter Password" name="psw" required><br><br>
+  
+      <input type="submit" value="Login" class="login-tc">
+    </div>
+  </form>
+</section>
 
 
  <h3>{{ incorrect }}</h3>
