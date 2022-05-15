@@ -594,14 +594,76 @@ def get_placedOrder():
             f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid from products natural join discounts "
             f"natural join images natural join colors join listOfItems using(pid) join orders using (oid) join users "
             f"using (id) where id = {cart_id} order by oid desc")).all()
+    for p in placed_order:
+        title = p.title
+        car_review = conn.execute(
+            text(f"select description, rating, title from reviews where id = {cart_id}")).all()
+        return render_template('placedOrder.html', placed_order=placed_order, curr=curr, car_review=car_review)
+
+
+@app.route('/placedOrder', methods=['POST'])
+def post_placedOrder():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    cart_id = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    title = request.form['title']
+    placed_order = conn.execute(
+        text(
+            f"select products.pid, users.id, vendor_id, orders.oid, username, title, description, warranty_pd, "
+            f"nOfItems, price, category, imageURL, color, discount_amt, end_date, orders.date, "
+            f"(round(price*discount_amt)) as disc_price, listOfItems.price_paid from products natural join discounts "
+            f"natural join images natural join colors join listOfItems using(pid) join orders using (oid) join users "
+            f"using (id) where id = {cart_id} order by oid desc")).all()
+    # car_review = conn.execute(
+    #     text(f"select description, rating from reviews where id = {cart_id}")).all()
     return render_template('placedOrder.html', placed_order=placed_order, curr=curr)
 # ---------------------------------------------
 # reviews
 
 
-@app.route('review', methods=['POST'])
+@app.route('/review', methods=['POST'])
 def post_review():
-    return
+    currid = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    rating = request.form['rating']
+    reviewtext = request.form['reviewtext']
+    title = request.form['title']
+    conn.execute(text(f"insert into reviews (id, title, rating, description) values ({currid}, '{title}', {rating}, '{reviewtext}')"))
+    return redirect(url_for('get_placedOrder'))
+
+
+@app.route('/reviewpage', methods=['GET'])
+def get_reviewpage():
+    allreviews = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id")).all()
+    return render_template('reviewpage.html', allreviews=allreviews)
+
+
+@app.route('/reviewpage', methods=['POST'])
+def post_reviewpage():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    ratingreview = request.form['ratingreview']
+    timereview = request.form['timereview']
+    if timereview == 'none' and ratingreview == 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    elif timereview == "old" and ratingreview == 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id order by date asc")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    elif timereview == "new" and ratingreview == 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id order by date desc")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    elif timereview == "old" and ratingreview != 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id where "
+                                         f"rating = {ratingreview} order by date desc")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    elif timereview == "new" and ratingreview != 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id where "
+                                         f"rating = {ratingreview} order by date asc")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    elif timereview == "none" and ratingreview != 'none':
+        reviewfilter = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id where "
+                                         f"rating = {ratingreview}")).all()
+        return render_template('reviewpage.html', reviewfilter=reviewfilter, curr=curr)
+    else:
+        return redirect(url_for('get_reviewpage'))
 
 
 if __name__ == '__main__':

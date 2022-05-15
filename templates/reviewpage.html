@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block body %}
+
+ <div class="mainfilter">
+            <h3>Filter Reviews</h3>
+            <form action="/reviewpage" method="POST" class="aform1">
+
+                <label for="timereview">Time:</label>
+                <select id="timereview" name="timereview">
+                    <option value="none" selected="selected">none</option>
+                    <option value="old">Oldest to newest</option>
+                    <option value="new">Newest to oldest</option>
+                </select><br>
+
+                <label for="ratingreview">Rating:</label>
+                <select id="ratingreview" name="ratingreview">
+                    <option value="none" selected="selected">none</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select><br>
+                <input type="submit" name="search" class="submit" value="Search">
+            </form>
+        </div><br>
+
+<section class="review">
+    <div class="review_area">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="left_sec">
+                    <!-- <img src="/static/images/quote.png"> -->
+                    <h3>What Our Customers Are Saying</h3>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="right_sec">
+                    <h4>Help us improve our products</h4>
+                    <div id="carouselExampleIndicators" class="carousel slide test_carousel" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="user1 active"></li>
+                          <li data-target="#carouselExampleIndicators" data-slide-to="1" class="user2"></li>
+                          <li data-target="#carouselExampleIndicators" data-slide-to="2" class="user3"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <p> insert a review </p>
+                            <h5>User 1</h5>
+                          </div>
+                          <div class="carousel-item">
+                            <p> insert a second review </p>
+                            <h5>User 2</h5>
+                          </div>
+                          <div class="carousel-item">
+                            <p> insert a third review </p>
+                            <h5>User 3</h5>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<h4>All reviews</h4>
+    {% for r in allreviews %}
+    <p>{{ r.title }}</p>
+    <p>Review: {{ r.description }}</p>
+    <p>{{ r.rating }} stars</p>
+    <p>{{ r.first_name }} {{ r.last_name }} </p> <br>
+    {% endfor %}
+
+    {% for rf in reviewfilter %}
+    <p>{{ rf.title }}</p>
+    <p class="rev_container__content">Review: {{ rf.description }}</p>
+    <p class="rev_container__content">{{ rf.rating }} stars</p>
+    <p class="rev_name">{{ rf.first_name }} {{ rf.last_name }} </p> <br>
+    {% endfor %}
+
+{% endblock %}
+

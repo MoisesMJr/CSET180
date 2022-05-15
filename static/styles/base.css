@@ -1,9 +1,10 @@
-* {
+*, html, body {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
-  /* background-color: cornflowerblue; */
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
 }
+ 
 /* header */
 .nav {
   width: 100%;
@@ -124,9 +125,44 @@ hr {
   width: 90%;
   margin: 0 auto;
 }
+.prodformdiv1 {
+display: block;
+  margin: 0 auto;
+  width: 100%;;
+}
+.reviewtext {
+   width: 100%;
+}
 
+.orderform {
+  margin: 0 auto;
+  width: 75%;
+}
 .proddiv img {
   height: 24rem;
+}
+.rating {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  --star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
+  --fill: gold;
+  --fillbg: rgba(100, 100, 100, 0.15);
+  --dir: right;
+  --stars: 5;
+  --starsize: 1.6rem;
+  --symbol: var(--star);
+  --value: 1;
+  --x: calc(100% * (var(--value) / var(--stars)));
+}
+.rating::-webkit-slider-runnable-track {
+  background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+  block-size: 100%;
+  mask: repeat left center/var(--starsize) var(--symbol);
+  -webkit-mask: repeat left center/var(--starsize) var(--symbol);
+}
+[dir="rtl"] .rating {
+  --dir: left;
 }
 
 /* customer page  */
@@ -145,6 +181,7 @@ hr {
   display: block;
 
 }
+
 
 /* footer  */
 footer {
@@ -231,3 +268,181 @@ footer h3 {
   max-width: 1200px;
   text-align: center;
 }
+
+p {
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+}
+.left_sec {
+  background-color: #001d41;
+  height: 600px;
+  padding: 10rem 7rem 0 7rem;
+  position: relative;
+}
+.left_sec img {
+  position: absolute;
+  width: 40px;
+  left: 10;
+  padding: 20px;
+  border-radius: 10px;
+}
+.left_sec h3 {
+  font-size: 70px;
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+.left_sec h3:before {
+  content: '';
+  background-image: url(../images/quote.png);
+  position: absolute;
+  top: 0;
+  left: -20px;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  background-size: 20px;
+  z-index: -1;
+}
+.review_area {
+  width: 100%;
+  padding: 0 15px 0 0;
+}
+.left_sec h3:after {
+  content: '';
+  background-color: #0d4386b3;
+  width: 60px;
+  height: 60px;
+  border-radius: 40px;
+  color: #fff;
+  position: absolute;
+  left: -40px;
+  top: -20px;
+  z-index: -2;
+}
+.right_sec {
+  padding: 8rem 8rem 6rem 8rem;
+  color: #5f6669;
+  text-align: center;
+}
+.right_sec h4{
+  font-size: 28px;
+  font-weight: 400;
+  color: #5f6669;
+}
+.carousel {
+  position: relative;
+}
+.carousel-indicators .active {
+  opacity: 1;
+}
+.test_carousel {
+  padding:  2rem;
+}
+.test_carousel p {
+  font-size: 18px;
+  line-height: 30px;
+}
+.test_carousel h5 {
+  font-weight: 600;
+  color: #001d41;
+  font-size: 26px;
+  margin-bottom: 2rem;
+}
+.carousel-indicators {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  margin-right: 15%;
+  margin-left: 15%;
+  list-style: none;
+}
+.carousel-indicators li {
+  box-sizing: content-box;
+  flex: 0 1 auto;
+  width: 30px;
+  height: 3px;
+  margin-right: 3px;
+  margin-left: 3px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: #001d41;
+  background-clip: padding-box;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  opacity: .5;
+  transition: opacity .6s ease;
+  
+}
+/* ol, ul {
+  margin-top: 0;
+  margin-bottom: 1rem;
+} */
+/* div {
+  display: block;
+} */
+::after, ::before {
+  box-sizing: border-box;
+}
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.carousel-item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition: transform .6s ease-in-out, -webkit-transform .6s ease-in-out;
+}
+.test_carousel .carousel-indicators li.user1 {
+  background-image: url(../images/profile.png);
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border-radius: 30px;
+  background-color: transparent;
+}
+.test_carousel .carousel-indicators li.user2 {
+  background-image: url(../images/man.png);
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border-radius: 30px;
+  background-color: transparent;
+}
+.test_carousel .carousel-indicators li.user3 {
+  background-image: url(../images/woman.png);
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border-radius: 30px;
+  background-color: transparent;
+}
+.test_carousel .carousel-indicators {
+  bottom: -3rem;
+}
+.test_carousel .carousel-indicators li.active {
+  width: 60px;
+  height: 60px;
+
+}
+.carousel-item.active, 
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+

@@ -2,14 +2,9 @@ function openCart() {
     $("#cart-container").toggle(750);
 }
 
-function openReviewText(){
-    $("#review").click(function(){
-        $("reviewtext").slideDown();
-    })
-}
-
-
-
+$("#review").click(function(){
+  $("reviewtext").hide();
+});
 
 // function openCheckout(){
 //     $("#gtc").click(function() {

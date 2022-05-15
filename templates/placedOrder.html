@@ -21,13 +21,25 @@
         <p><b>Discounted Price:</b> {{ y[13] }}</p>
         <p><b>Category:</b> {{ y[8] }}</p>
         <p><b>Color:</b> {{ y[10] }}</p>
-        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" alt="" style="width: 704px; height: 50%;">
-            <div id="reviewtext">
-                <form action="/review">
-                    <input type="text" name="reviewtext">
+        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" onclick="openReviewText()" alt="pic id code" style="width: 704px; height: 50%;" role="button">
+            <div id="reviewtext" class="prodformdiv1">
+                <form action="/review" class="orderform" method="post">
+                    <input type="text" value="{{ y.title }}" name="title" style="display:none">
+                    <input type="text" name="reviewtext" class="reviewtext"><br>
+                    <input type="range" value="1" max="5" step="1" class="rating" oninput="this.style.setProperty('--value', this.value)" name="rating">
+                    <input type="submit" value="Submit Review">
                 </form>
             </div>
     </div>
+    {% for c in car_review %}
+        {% if c.title == y.title %}
+            <h4>Your Reviews:</h4>
+            <p>{{ c.description }}</p>
+            <p>{{ c.rating }} stars!</p>
+        {% else %}
+            <p>No reviews on this product yet.</p>
+        {% endif %}
+    {% endfor %}
 </div>
 
 {% endfor %}
