@@ -396,6 +396,7 @@ def get_main():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
     currid = conn.execute(text(f"select id from currentuser")).all()[0][0]
     nsearch = request.args.get('nsearch')
+    complaint = conn.execute(text(f"select * from complaints where username = '{curr}'")).all()
     name = conn.execute(
         text(f"select username, vendor_id, products.pid, title, description, warranty_pd, nOfItems, "
                              f"price, category, color, imageURL from users inner join products natural join colors "
@@ -408,7 +409,7 @@ def get_main():
         text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
              f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
              f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
-    return render_template('main.html', allproducts=allproducts, curr=curr, name=name, cart=cart)
+    return render_template('main.html', allproducts=allproducts, curr=curr, name=name, cart=cart, complaint=complaint)
 
 
 @app.route('/main', methods=['POST'])
@@ -629,6 +630,7 @@ def post_review():
 @app.route('/reviewpage', methods=['GET'])
 def get_reviewpage():
     allreviews = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id")).all()
+    print(allreviews, file=sys.stderr)
     return render_template('reviewpage.html', allreviews=allreviews)
 
 
@@ -702,18 +704,71 @@ def post_returns():
 @app.route('/returnrequests', methods=['GET'])
 def get_returnrequests():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
-    requests = conn.execute(text(f"select * from complaints")).all()
+    requests = conn.execute(text(f"select * from complaints where status = 'pending'")).all()
     return render_template('returnrequests.html', requests=requests, curr=curr)
 
 
 @app.route('/returnrequests', methods=['POST'])
 def post_returnrequests():
-    requests = conn.execute(text(f"select * from complaints")).all()
+    requests = conn.execute(text(f"select * from complaints where status = 'pending'")).all()
     change_req_status = request.form['change_req_status']
-    for req in requests:
-        date = req.date
-        conn.execute(text(f"update complaints set status = {change_req_status} where date = {date}"))
-        return redirect(url_for('get_returnrequests'))
+    cid = request.form['cid']
+    conn.execute(text(f"update complaints set status = '{change_req_status}' where cid = {cid}"))
+    print('test test test test', cid, file=sys.stderr)
+    return redirect(url_for('get_returnrequests', requests=requests))
+# ---------------------------------------------
+# message/chats
+
+
+@app.route('/chat', methods=['GET'])
+def get_chat():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    vendors = conn.execute(text(f"select * from users where type = 'v'")).all()
+    bought = conn.execute(text(f"select users.id, username, orders.oid, title from users join orders on users.id = "
+                               f"orders.id join listOfItems on orders.oid = listOfItems.oid join products on "
+                               f"listOfItems.pid = products.pid where username = '{curr}'")).all()
+    return render_template('chat.html', curr=curr, vendors=vendors, bought=bought)
+
+
+@app.route('/chat', methods=['POST'])
+def post_chat():
+    vendors = conn.execute(text(f"select * from users where type = 'v'")).all()
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    bought = conn.execute(text(f"select users.id, username, orders.oid, title from users join orders on users.id = "
+                               f"orders.id join listOfItems on orders.oid = listOfItems.oid join products on "
+                               f"listOfItems.pid = products.pid where username = '{curr}'")).all()
+    demand = request.form['chat_demand']
+    message = request.form['message']
+    user_to = request.form['vid']
+    title = request.form['tid']
+    vendor_id = conn.execute(
+        text(f"select pid, vendor_id, username, title from products join users on products.vendor_id = users.id where "
+             f"username = '{user_to}' and title = '{title}'")).all()
+    print('test test test test', vendor_id, file=sys.stderr)
+    if len(vendor_id) == 0:
+        notright = "This product is not sold by this vendor."
+        return render_template('chat.html', notright=notright, bought=bought, vendors=vendors)
+    else:
+        conn.execute(text(f"insert into messages (title, demand) values ('{title}', '{demand}')"))
+        mid = conn.execute(text(f"select max(mid) from messages")).all()[0][0]
+        conn.execute(text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
+                          f" '{message}')"))
+        return render_template('chat.html', vendors=vendors, curr=curr, bought=bought)
+# ---------------------------------------------
+# chatroom
+
+
+@app.route('/chatroom', methods=['GET'])
+def get_chatroom():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    conn.execute(text(f"select * from messages_chats"))
+    conn.execute(text(f"select * from messages_chats where mid =  order by date"))
+    return render_template('chatroom.html', curr=curr)
+
+
+@app.route('/chatroom', methods=['POST'])
+def post_chatroom():
+    return render_template('chatroom.html')
 
 
 if __name__ == '__main__':

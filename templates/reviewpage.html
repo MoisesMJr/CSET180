@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-
+<br>
 <section class="review">
     <div class="review_area">
         <div class="row">
@@ -20,26 +20,26 @@
                         </ol>
                         <div class="carousel-inner">
                           <div class="carousel-item active">
-                            {% for r in allreviews %}
-                            <p>{{ r.title }}</p>
-                            <p> {{ r[11] }} </p>
-                            <h5>{{ r[2] }}</h5>
-                            {% endfor %}
-                          </div>
-                          <div class="carousel-item">
-                            {% for r in allreviews %}
-                            <p>{{ r.title }}</p>
-                            <p> {{ r.description }} </p>
-                            <h5>{{ r.first_name }}</h5>
-                            {% endfor %}
+                            
+                            <p>{{ allreviews[0][9] }}</p>
+                            <p>{{ allreviews[0][11] }}</p>
+                            <h5>{{ allreviews[0][2] }} {{ allreviews[0][3] }}</h5>
+                            
                           </div>
                           
                           <div class="carousel-item">
-                            {% for r in allreviews %}
-                            <p>{{ r.title }}</p>
-                            <p> {{ r.description }} </p>
-                            <h5>{{ r.first_name }}</h5>
-                            {% endfor %}
+                            
+                            <p>{{ allreviews[2][9] }}</p>
+                            <p>{{ allreviews[2][11] }}</p>
+                            <h5>{{ allreviews[2][2] }} {{ allreviews[2][3] }}</h5>
+                            
+                          </div>
+                          
+                          <div class="carousel-item">
+                            
+                            <p>{{ allreviews[3][9] }}</p>
+                            <p>{{ allreviews[3][11] }}</p>
+                            <h5>{{ allreviews[3][2] }} {{ allreviews[3][3] }}</h5>
                           </div>
                         </div>
                       </div>
@@ -47,7 +47,11 @@
             </div>
         </div>
     </div>
-</section>
+</section><br>
+
+
+
+
 
  <div class="mainfilter1">
     <h3 class="aform4">Filter Reviews</h3><br>
@@ -76,7 +80,7 @@
 
 <div class="mainfilter1">
 <h3 class="aform4">All reviews</h3>
-{% for r in allreviews %}
+    {% for r in allreviews %}
     <p>{{ r.title }}</p>
     <p>Review: {{ r.description }}</p>
     <p>{{ r.rating }} stars</p>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block body %}
+
+<br>
+<section class="returns">
+    <div class="returndiv">
+        <h3 class="aform4">Talk to your favorite vendor!</h3><br>
+        <form action="/chat" method="post" class="aform4">
+
+            <label><b>Which vendor would you like to speak to?</b></label>
+             <select name="vid" required>
+                <option disabled selected>Choose vendor:</option>
+                {% for v in vendors %}
+                <option value="{{ v.username }}">{{ v.username }}</option>
+                {% endfor %}
+            </select> <br>
+
+            <label><b>Message:</b></label>
+            <textarea maxlength="250" placeholder="Write something.." name="message" style="width: 100%;
+            height: 150px;
+            padding: 12px 10px;
+            box-sizing: border-box;
+            border: 2px solid black;
+            border-radius: 4px;" required></textarea><br>
+
+            <label for="chat_demand"><b>What is this chat about?</b></label>
+            <select id="chat_demand" name="chat_demand" required>
+                <option disabled value="none" selected="selected">none</option>
+                <option value="return">Return</option>
+                <option value="refund">Refund</option>
+                <option value="warr_claim">File a warranty claim</option>
+            </select><br>
+
+            <label><b>For which product?</b></label>
+             <select name="tid" required>
+                <option disabled selected>Choose product:</option>
+                {% for b in bought %}
+                <option value="{{ b.title }}">{{ b.title }}</option>
+                {% endfor %}
+            </select> <br>
+            <h3 style="color: red">{{ notright }}</h3>
+            <input type="submit" name="search" class="aform2" value="Submit">
+        </form>
+    </div><br>
+
+</section>
+
+
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section><br>
+{% endblock %}

@@ -2,6 +2,10 @@ function openCart() {
     $("#cart-container").toggle(750);
 }
 
+function openComplaints() {
+    $("#complaint-container").toggle(1000);
+}
+
 $("#review").click(function(){
   $("reviewtext").hide();
 });

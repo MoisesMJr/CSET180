@@ -10,7 +10,8 @@
   <h3>Pending Return Requests:</h3><br>
   {% for req in requests %}
   <div class="proddiv1">
-    <form action="/returnrequests" method="post" class="prodformdiv"></form>
+    <form action="/returnrequests" method="POST" class="prodformdiv">
+      <input type="number" value="{{ req.cid }}" name="cid" style="display: none">
       <p><b>Complaint ID:</b> <em>{{ req.cid }}</em> </p>
       <p><b>User:</b> <em>{{ req.username }}</em> </p>
       <p><b>Product:</b> <em>{{ req.title }}</em> </p>
@@ -19,21 +20,16 @@
       <p><b>Date:</b> <em>{{ req.date }}</em> </p><br>
 
       <select name="change_req_status">
-        <option selected>Pending:</option>
+        <option selected>pending</option>
         <option value="confirmed">Confirmed</option>
         <option value="rejected">Rejected</option>
         <option value="processing">Processing</option>
         <option value="complete">Complete</option>
       </select> <br><br>
-      <input type="submit" value="Submit" class="submit"><br /><br />
+      <input type="submit" value="Submit" class="submit"><br><br>
     </form>
   </div>
   {% endfor %}
-
-
-
-
-
 </section>
 
 <section class="logout">
