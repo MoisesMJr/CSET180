@@ -24,7 +24,17 @@ conn = engine.connect()
 
 @app.route('/', methods=['GET'])
 def get_index():
-    return render_template('landing.html')
+    nsearch = request.args.get('nsearch')
+    name = conn.execute(
+        text(f"select username, vendor_id, products.pid, title, description, warranty_pd, nOfItems, "
+             f"price, category, color, imageURL from users inner join products natural join colors "
+             f"natural join images on users.id = products.vendor_id where title like "
+             f"'%{nsearch}%'")).all()
+    allproducts = conn.execute(
+        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+             f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
+    return render_template('landing.html', allproducts=allproducts, name=name)
 
 
 @app.route('/', methods=['POST'])
@@ -104,13 +114,17 @@ def post_logout():
 @app.route('/vendor', methods=['GET'])
 def get_vendor():
     currentuser = conn.execute(text(f"select id from currentuser")).all()[0][0]
+    currtype = conn.execute(text(f"select type from currentuser")).all()[0][0]
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
-    products = conn.execute(
-        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
-             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
-             f"natural join images natural join colors join users on users.id = products.vendor_id where vendor_id = "
-             f"{currentuser}")).all()
-    return render_template('vendor.html', products=products, curr=curr)
+    if currtype == 'v':
+        products = conn.execute(
+            text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+                 f"natural join images natural join colors join users on users.id = products.vendor_id where vendor_id = "
+                 f"{currentuser}")).all()
+        return render_template('vendor.html', products=products, curr=curr)
+    else:
+        return redirect(url_for('get_login'))
 
 
 @app.route('/vendor', methods=['POST'])
@@ -285,8 +299,10 @@ def get_search_name():
         return render_template('admin.html', name=name, curr=curr)
     elif currtype == 'v':
         return render_template('vendor.html', name=name, curr=curr)
-    else:
+    elif currtype == 'c':
         return render_template('main.html', name=name, curr=curr)
+    else:
+        return render_template('main.html', name=name)
 
 
 @app.route('/dsearch', methods=['GET'])
@@ -303,8 +319,10 @@ def get_search_admin_desc():
         return render_template('admin.html', name=name, curr=curr)
     elif currtype == 'v':
         return render_template('vendor.html', name=name, curr=curr)
-    else:
+    elif currtype == 'c':
         return render_template('main.html', name=name, curr=curr)
+    else:
+        return render_template('main.html', name=name)
 
 
 @app.route('/vsearch', methods=['GET'])
@@ -321,8 +339,10 @@ def get_search_admin_username():
         return render_template('admin.html', name=name, curr=curr)
     elif currtype == 'v':
         return render_template('vendor.html', name=name, curr=curr)
-    else:
+    elif currtype == 'c':
         return render_template('main.html', name=name, curr=curr)
+    else:
+        return render_template('main.html', name=name)
 
 
 @app.route('/search', methods=['POST'])
@@ -395,22 +415,26 @@ def post_status():
 @app.route('/main', methods=['GET'])
 def get_main():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    currtype = conn.execute(text(f"select type from currentuser")).all()[0][0]
     currid = conn.execute(text(f"select id from currentuser")).all()[0][0]
     nsearch = request.args.get('nsearch')
     complaint = conn.execute(text(f"select * from complaints where username = '{curr}'")).all()
-    name = conn.execute(
-        text(f"select username, vendor_id, products.pid, title, description, warranty_pd, nOfItems, "
-                             f"price, category, color, imageURL from users inner join products natural join colors "
-                             f"natural join images on users.id = products.vendor_id where title like "
-                             f"'%{nsearch}%'")).all()
-    cart = conn.execute(
-        text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price, item_num from products "
-             f"natural join discounts natural join cart where cart_id = {currid}")).all()
-    allproducts = conn.execute(
-        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
-             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
-             f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
-    return render_template('main.html', allproducts=allproducts, curr=curr, name=name, cart=cart, complaint=complaint)
+    if currtype == "c":
+        name = conn.execute(
+            text(f"select username, vendor_id, products.pid, title, description, warranty_pd, nOfItems, "
+                                 f"price, category, color, imageURL from users inner join products natural join colors "
+                                 f"natural join images on users.id = products.vendor_id where title like "
+                                 f"'%{nsearch}%'")).all()
+        cart = conn.execute(
+            text(f"select pid, cart_id, title, price, discount_amt, (price*discount_amt) as disc_price, item_num from products "
+                 f"natural join discounts natural join cart where cart_id = {currid}")).all()
+        allproducts = conn.execute(
+            text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+                 f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
+        return render_template('main.html', allproducts=allproducts, curr=curr, name=name, cart=cart, complaint=complaint)
+    else:
+        return redirect(url_for('get_login'))
 
 
 @app.route('/main', methods=['POST'])
@@ -443,7 +467,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}'")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter != "none" and colorfilter != "none" and availfilter == "none":
         filter = conn.execute(
             text(
@@ -451,7 +475,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}' and color = '{colorfilter}'")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter != "none" and colorfilter == "none" and availfilter == "inStock":
         filter = conn.execute(
             text(
@@ -459,7 +483,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}' and nOfItems > 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter != "none" and colorfilter == "none" and availfilter == "outStock":
         filter = conn.execute(
             text(
@@ -467,7 +491,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}' and nOfItems = 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter != "none" and colorfilter != "none" and availfilter == "inStock":
         filter = conn.execute(
             text(
@@ -475,7 +499,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}' and color = '{colorfilter}' and nOfItems > 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter != "none" and colorfilter != "none" and availfilter == "outStock":
         filter = conn.execute(
             text(
@@ -483,7 +507,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where category = "
                 f"'{catfilter}' and color = '{colorfilter}' and nOfItems = 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter == "none" and colorfilter != "none" and availfilter == "none":
         filter = conn.execute(
             text(
@@ -491,7 +515,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where color = "
                 f"'{colorfilter}'")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter == "none" and colorfilter != "none" and availfilter == "inStock":
         filter = conn.execute(
             text(
@@ -499,7 +523,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where color = "
                 f"'{colorfilter}' and nOfItems > 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter == "none" and colorfilter != "none" and availfilter == "outStock":
         filter = conn.execute(
             text(
@@ -507,7 +531,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where color = "
                 f"'{colorfilter}' and nOfItems = 0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter == "none" and colorfilter == "none" and availfilter == "inStock":
         filter = conn.execute(
             text(
@@ -515,7 +539,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where nOfItems > "
                 f"0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     elif catfilter == "none" and colorfilter == "none" and availfilter == "outStock":
         filter = conn.execute(
             text(
@@ -523,7 +547,7 @@ def post_filter():
                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
                 f"natural join images natural join colors join users on users.id = products.vendor_id where nOfItems = "
                 f"0")).all()
-        return render_template('main.html', filter=filter, curr=curr)
+        return render_template('main.html', filter=filter)
     else:
         return redirect(url_for('post_main'))
 # ---------------------------------------------
@@ -778,7 +802,7 @@ def post_chatroom():
         text(f"select * from messages_chats where mid = {mid} and user_to = '{user_to}' order by date"))
     return render_template('chatroom.html', curr=curr, startchat=startchat)
 # ---------------------------------------------
-# all chatrooms
+# user chatrooms
 
 
 @app.route('/alluserchats', methods=['GET'])
@@ -786,28 +810,126 @@ def get_alluserchats():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
     allchats = conn.execute(text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
                                  f"user_to = '{curr}'")).all()
-    mid = request.args.get('mid')
-    allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
-    print('test test test test', allchats, file=sys.stderr)
-    print('test test test test', allchatspost, file=sys.stderr)
-    print('test test test test', mid, file=sys.stderr)
-    return render_template('alluserchats.html', curr=curr, allchats=allchats, allchatspost=allchatspost)
+    return render_template('alluserchats.html', curr=curr, allchats=allchats)
 
 
 @app.route('/alluserchats', methods=['POST'])
 def post_alluserchats():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    mid = request.form['mid']
     allchats = conn.execute(
         text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
              f"user_to = '{curr}'")).all()
-    mid = request.form['mid']
-    message = request.form['message']
+    allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+    return render_template('alluserchats.html', curr=curr, allchatspost=allchatspost, allchats=allchats)
+
+
+@app.route('/loadmsg', methods=['POST'])
+def post_loadmsg():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
     user_to = request.form['user_to']
+    message = request.form['message']
+    mid = request.form['mid']
+    allchats = conn.execute(
+        text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+             f"user_to = '{curr}'")).all()
     conn.execute(
         text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
              f" '{message}')"))
     allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
     return render_template('alluserchats.html', curr=curr, allchatspost=allchatspost, allchats=allchats)
+# ---------------------------------------------
+# all chatrooms
+
+
+@app.route('/receivedchats', methods=['GET'])
+def get_receivedchats():
+    currtype = conn.execute(text(f"select type from currentuser")).all()[0][0]
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    if currtype == 'a':
+        allchats = conn.execute(
+            text(f"select * from messages natural join messages_chats")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchats=allchats)
+    else:
+        allchats = conn.execute(text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+                                     f"user_to = '{curr}'")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchats=allchats)
+
+
+@app.route('/receivedchats', methods=['POST'])
+def post_receivedchats():
+    currtype = conn.execute(text(f"select type from currentuser")).all()[0][0]
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    if currtype == 'a':
+        allchats = conn.execute(
+            text(f"select * from messages natural join messages_chats")).all()
+        mid = request.form['mid']
+        allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchats=allchats, allchatspost=allchatspost)
+    else:
+        allchats = conn.execute(
+            text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+                 f"user_to = '{curr}'")).all()
+        mid = request.form['mid']
+        allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchats=allchats,
+                               allchatspost=allchatspost)
+
+
+@app.route('/adminloadmsg', methods=['POST'])
+def post_adminloadmsg():
+    currtype = conn.execute(text(f"select type from currentuser")).all()[0][0]
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    user_to = request.form['user_to']
+    message = request.form['message']
+    mid = request.form['mid']
+    if currtype == 'a':
+        allchats = conn.execute(
+            text(f"select * from messages natural join messages_chats")).all()
+        conn.execute(
+            text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
+                 f" '{message}')"))
+        allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchatspost=allchatspost, allchats=allchats)
+    else:
+        allchats = conn.execute(
+            text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+                 f"user_to = '{curr}'")).all()
+        conn.execute(
+            text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
+                 f" '{message}')"))
+        allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+        return render_template('receivedchats.html', curr=curr, currtype=currtype, allchatspost=allchatspost,
+                               allchats=allchats)
+# ---------------------------------------------
+# all cars
+
+
+@app.route('/mercedes', methods=['GET'])
+def get_mercedes():
+    allproducts = conn.execute(
+        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+             f"natural join images natural join colors join users on users.id = products.vendor_id where title like '%mercedes%'")).all()
+    return render_template('mercedes.html', allproducts=allproducts)
+
+
+@app.route('/bmw', methods=['GET'])
+def get_bmw():
+    allproducts = conn.execute(
+        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+             f"natural join images natural join colors join users on users.id = products.vendor_id where title like '%bmw%'")).all()
+    return render_template('bmw.html', allproducts=allproducts)
+
+
+@app.route('/vw', methods=['GET'])
+def get_vw():
+    allproducts = conn.execute(
+        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+             f"natural join images natural join colors join users on users.id = products.vendor_id where title like '%vw%'")).all()
+    return render_template('vw.html', allproducts=allproducts)
 
 
 if __name__ == '__main__':

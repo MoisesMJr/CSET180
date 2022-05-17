@@ -562,9 +562,14 @@ p {
   color: #005cbf;
   display: flex;
 }
-
-
-
+.centerthis {
+  display: flex;
+}
+.logintobuy {
+  margin: auto;
+  align-items: center;
+  color: red;
+}
 
 
 

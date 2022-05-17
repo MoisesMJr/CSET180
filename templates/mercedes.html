@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block body %}
+
+<section class="products">
+    {% for y in name %}
+    <div class="proddiv">
+        <li><b>Title:</b> {{ y[3] }}</li>
+        <li><b>Category:</b> {{ y[8] }}</li>
+        <li><b>Description:</b> {{ y[4] }}</li>
+         {% if y[13] == 0 %}
+            <li><b>Price:</b> ${{ y[7] }}</li>
+        {% else %}
+            <li><b>Discounted Price:</b> ${{ '%0.2f' % y[13]|float }}</li>
+            {% if y[13] > 0 %}
+                {% set disc_price = y[7]-y[13] %}
+                <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+            {% else %}
+                <li><b>Amount Saved:</b> $0 </li>
+            {% endif %}
+        {% endif %}
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
+    </div>
+        {% endfor %}
+
+        {% for y in allproducts %}
+    <div class="proddiv">
+        <li><b>Title:</b> {{ y[3] }}</li>
+        <li><b>Category:</b> {{ y[8] }}</li>
+        <li><b>Description:</b> {{ y[4] }}</li>
+         {% if y[13] == 0 %}
+            <li><b>Price:</b> ${{ y[7] }}</li>
+        {% else %}
+            <li><b>Discounted Price:</b> ${{ '%0.2f' % y[13]|float }}</li>
+            {% if y[13] > 0 %}
+                {% set disc_price = y[7]-y[13] %}
+                <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+            {% else %}
+                <li><b>Amount Saved:</b> $0 </li>
+        {% endif %}
+        {% endif %}
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
+    </div>
+        {% endfor %}
+
+    {% for y in filter %}
+    <div class="proddiv">
+        <li><b>Title:</b> {{ y[3] }}</li>
+        <li><b>Category:</b> {{ y[8] }}</li>
+        <li><b>Description:</b> {{ y[4] }}</li>
+         {% if y[13] == 0 %}
+            <li><b>Price:</b> ${{ y[7] }}</li>
+        {% else %}
+            <li><b>Discounted Price:</b> ${{ '%0.2f' % y[13]|float }}</li>
+            {% if y[13] > 0 %}
+                {% set disc_price = y[7]-y[13] %}
+                <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
+            {% else %}
+                <li><b>Amount Saved:</b> $0 </li>
+            {% endif %}
+        {% endif %}
+        <img src="{{ y[9] }}" alt="" style="width: 612px; height: 50%;">
+    </div>
+        {% endfor %}
+</section><br>
+
+<div class="centerthis">
+    <p class="logintobuy">Must be logged in to purchase any vehicles.</p>
+</div>
+
+<section class="login">
+    <form action="/login" method="POST">
+    <button type="submit">Login</button>
+    </form>
+</section><br>
+
+{% endblock %}

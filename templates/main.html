@@ -61,7 +61,7 @@
         <button type="submit" >Clear search</button>
         </form>
     </div><br>
-    
+{% if curr %}
     <form action="/placedOrder" method="get">
         <button type="submit">Go to placed orders</button>
     </form><br>
@@ -73,27 +73,28 @@
     <form action="/alluserchats" method="get">
         <button type="submit">Go to previous chats</button>
     </form><br>
+    {% endif %}
 </section>
 
-
+{% if curr %}
 <section class="user_complaints">
     <button type="button" onclick="openComplaints()">Requests/Complaints</button>
     <div id="complaint-container" style="display:none">
         <h5>Requests/Complaints:</h5>
     
-    <div class="request_outside_div">
-        {% for c in complaint %}
-        <div class="center_complaint">
-            <p><b>Request ID:</b> <em>{{ c.cid }}</em> </p>
-            <p><b>Product Name:</b> <em>{{ c.title }}</em> </p>
-            <p><b>Request:</b> <em>{{ c.demand }}</em> </p>
-            <p><b>Status:</b> <em>{{ c.status }}</em> </p>
-        </div><br>
-        {% endfor %}
-    </div>
-    
+        <div class="request_outside_div">
+            {% for c in complaint %}
+            <div class="center_complaint">
+                <p><b>Request ID:</b> <em>{{ c.cid }}</em> </p>
+                <p><b>Product Name:</b> <em>{{ c.title }}</em> </p>
+                <p><b>Request:</b> <em>{{ c.demand }}</em> </p>
+                <p><b>Status:</b> <em>{{ c.status }}</em> </p>
+            </div><br>
+            {% endfor %}
+        </div>
     </div>
 </section><br>
+{% endif %}
 
 <section class="products">
     {% for y in name %}
@@ -213,9 +214,13 @@
 
 </section><br>  
 
+{% if curr %}
 <section class="logout">
     <form action="/logout" method="POST">
     <button type="submit">Logout</button>
     </form>
 </section><br>
+
+{% endif %}
+
 {% endblock %}

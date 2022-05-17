@@ -9,7 +9,7 @@
 
 <div class="alluserchat">
 {% for a in allchats %}
-    <form action="/alluserchats" method="get" class="alluserform">
+    <form action="/alluserchats" method="post" class="alluserform">
         <input value="{{ a.mid }}" name="mid" style="display:none">
         <p>Chat ID {{ a.mid }}</p><br>
         <p>Chief complaint: {{ a.demand }}</p><br>
@@ -20,7 +20,7 @@
 
 <section class="chat-area">
     <div class="alluserchats">
-        <form action="/alluserchats" method="post" class="aform4">
+        <form action="/loadmsg" method="post" class="aform4">
             {% for acp in allchatspost %}
             <input value="{{ acp.user_to }}" name="user_to" style="display:none">
             <input value="{{ acp.mid }}" name="mid" style="display:none">
