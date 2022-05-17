@@ -349,7 +349,8 @@ footer h3 {
   border-bottom-right-radius: 30px;
   padding: 10px 20px;
   border: none;
-  background: #f69314;
+  background: rgb(123, 161, 163);
+  color: white;
 }
 .site-credit {
   width: 100%;

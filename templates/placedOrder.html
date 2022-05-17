@@ -11,19 +11,18 @@
 {% for y in placed_order %}
 <div class="proddiv">
     <div class="prodformdiv1">
-        <p><b>Product ID:</b> {{ y[0] }}</p>
-        <p><b>ID:</b>{{ y[1] }}</p>
-        <p><b>Vendor ID: </b> {{ y[2] }}</p>
-        <p><b>Order ID: </b> {{ y[3] }}</p>
-        <p><b>Vendor ID:</b> {{ y[2] }}</p>
-        <p><b>Title:</b> {{ y[3] }}</p>
-        <p><b>Description:</b> {{ y[4] }}</p>
-        <p><b>Warranty Period in days:</b> {{ y[5] }}</p>
-        <p><b>Regular Price:</b> {{ y[7] }}</p>
-        <p><b>Discounted Price:</b> {{ y[13] }}</p>
-        <p><b>Category:</b> {{ y[8] }}</p>
-        <p><b>Color:</b> {{ y[10] }}</p>
-        <p><b>Image:</b></p><img src="{{ y[11] }}" id="review" onclick="openReviewText()" alt="pic id code" style="width: 612px; height: 50%;" role="button">
+        <p><b>Product ID:</b> {{ y.pid }}</p>
+        <p><b>ID:</b>{{ y.id }}</p>
+        <p><b>Vendor ID: </b> {{ y.vendor_id }}</p>
+        <p><b>Order ID: </b> {{ y.oid }}</p>
+        <p><b>Title:</b> {{ y.title }}</p>
+        <p><b>Description:</b> {{ y.description }}</p>
+        <p><b>Warranty Period in days:</b> {{ y.warranty_pd }}</p>
+        <p><b>Regular Price:</b> {{ y.price }}</p>
+        <p><b>Discounted Price:</b> {{ y.disc_price }}</p>
+        <p><b>Category:</b> {{ y.category }}</p>
+        <p><b>Color:</b> {{ y.color }}</p>
+        <p><b>Image:</b></p><img src="{{ y.imageURL }}" id="review" onclick="openReviewText()" alt="pic id code" style="width: 612px; height: 50%;" role="button">
             <div id="reviewtext" class="prodformdiv1">
                 <form action="/review" class="orderform" method="post">
                     <input type="text" value="{{ y.title }}" name="title" style="display:none">

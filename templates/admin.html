@@ -180,9 +180,9 @@
         <li><b>Inventory:</b> {{ x[6] }}</li>
         <li><b>Category:</b> {{ x[8] }}</li>
         <li><b>Price:</b> ${{ x[7] }}</li>
-        <li><b>Discounted Price:</b> ${{ '%0.2f' % x[13]|float }}</li>
-        {% if x[13] > 0 %}
-            {% set disc_price = x[7]-x[13] %}
+        <li><b>Discounted Price:</b> ${{ '%0.2f' % x.disc_price|float }}</li>
+        {% if x.disc_price > 0 %}
+            {% set disc_price = x.price-x.disc_price %}
             <li><b>Amount Saved:</b> ${{ '%0.2f' % disc_price|float }}</li>
         {% else %}
             <li><b>Amount Saved:</b> $0 </li>

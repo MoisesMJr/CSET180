@@ -159,9 +159,11 @@ def get_admin():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
     if curr == "admin":
         allproducts = conn.execute(
-            text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
-                 f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
-                 f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
+            text(
+                f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+                f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+                f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
+        print('test test', allproducts, file=sys.stderr)
         return render_template('admin.html', allproducts=allproducts, curr=curr)
     else:
         return redirect(url_for('get_login'))
@@ -204,8 +206,8 @@ def post_delete():
     productid = request.form['productid']
     conn.execute(text(f"delete from images where pid = {productid}"))
     conn.execute(text(f"delete from colors where pid = {productid}"))
-    conn.execute(text(f"delete from products where pid = {productid}"))
     conn.execute(text(f"delete from discounts where pid = {productid}"))
+    conn.execute(text(f"delete from products where pid = {productid}"))
     return redirect(url_for('get_admin'))
 # ---------------------------------------------
 # edit account
@@ -362,9 +364,10 @@ def post_discount():
     dpid = request.form['dpid']
     discount = request.form['discount']
     end_date = request.form['end_date']
-    allproducts = conn.execute(text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, "
-                                    f"price, category, imageURL, color from products natural join images natural "
-                                    f"join colors join users where users.id = products.vendor_id")).all()
+    allproducts = conn.execute(
+        text(f"select pid, vendor_id, username, title, description, warranty_pd, nOfItems, price, category, imageURL, "
+             f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
+             f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
     if discount != 'none':
         conn.execute(text(f"update discounts set discount_amt = {discount}, end_date = '{end_date}' where pid = {dpid}"))
     return render_template('admin.html', allproducts=allproducts)
@@ -445,6 +448,20 @@ def post_main():
              f"color, discount_amt, end_date, (price*discount_amt) as disc_price from products natural join discounts "
              f"natural join images natural join colors join users where users.id = products.vendor_id")).all()
     return render_template('main.html', allproducts=allproducts, curr=curr)
+# ---------------------------------------------
+# account page
+
+
+@app.route('/accountpage', methods=['GET'])
+def get_accountpage():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    acct_info = conn.execute(text(f"select * from users where username = '{curr}'")).all()
+    return render_template('accountpage.html', curr=curr, acct_info=acct_info)
+
+
+@app.route('/accountpage', methods=['POST'])
+def post_accountpage():
+    return render_template('accountpage.html')
 # ---------------------------------------------
 # filter
 

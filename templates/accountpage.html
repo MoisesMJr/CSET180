@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+<br>
+
+<section class="main">
+    <form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+    </form><br>
+</section><br>
+
+<div class="aform4" style="align-items:center; border: 2px solid black;">
+    <h3>Account information:</h3>
+</div><br>
+<div class="aform4" style="align-items:center; border: 2px solid black;">
+{% for ai in acct_info %}
+    <p><b>Account ID: </b><em>{{ ai.id }}</em></p><br>
+    <p><b>Username: </b><em>{{ ai.username }}</em></p><br>
+    <p><b>Name: </b><em>{{ ai.first_name }}</em><em>{{ ai.last_name }}</em></p><br>
+    <p><b>Email: </b><em>{{ ai.email }}</em></p>
+{% endfor %}
+</div>
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section><br>
+{% endblock %}
