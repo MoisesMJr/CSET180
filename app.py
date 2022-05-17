@@ -750,7 +750,7 @@ def get_chat():
     bought = conn.execute(text(f"select users.id, username, orders.oid, title from users join orders on users.id = "
                                f"orders.id join listOfItems on orders.oid = listOfItems.oid join products on "
                                f"listOfItems.pid = products.pid where username = '{curr}'")).all()
-    return render_template('chat.html', curr=curr, vendors=vendors, bought=bought)
+    return render_template('chat.html', vendors=vendors, bought=bought)
 
 
 @app.route('/chat', methods=['POST'])
