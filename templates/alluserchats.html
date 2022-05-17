@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block body %}
+<br>
+<section class="main">
+    <form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+    </form><br>
+</section><br>
+
+<div class="alluserchat">
+{% for a in allchats %}
+    <form action="/alluserchats" method="get" class="alluserform">
+        <input value="{{ a.mid }}" name="mid" style="display:none">
+        <p>Chat ID {{ a.mid }}</p><br>
+        <p>Chief complaint: {{ a.demand }}</p><br>
+        <input type="submit" value="Go to this chat">
+    </form><br>
+{% endfor %}
+</div><br>
+
+<section class="chat-area">
+    <div class="alluserchats">
+        <form action="/alluserchats" method="post" class="aform4">
+            {% for acp in allchatspost %}
+            <input value="{{ acp.user_to }}" name="user_to" style="display:none">
+            <input value="{{ acp.mid }}" name="mid" style="display:none">
+            {% endfor %}
+            <div class="chatroom-area">
+                <h5><em>How can we assist you, {{ curr }}?</em></h5><br>
+                {% for acp in allchatspost %}
+                <p class="chatcolor"><b>{{ acp.user_from }}: </b></p> <p>{{ acp.text }} <br><em>{{ acp.date }}</em></p>
+                {% endfor %}
+            </div><br>
+            <textarea maxlength="250" placeholder="Write something.." name="message" style="
+                height: 45px;
+                padding: 10px;
+                box-sizing: border-box;
+                border: 2px solid black;
+                border-radius: 4px;" required></textarea><br>
+            <input type="submit" name="search" class="aform2" value="Submit">
+        </form>
+    </div><br>
+</section><br>
+
+
+
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+    </form>
+</section><br>
+{% endblock %}

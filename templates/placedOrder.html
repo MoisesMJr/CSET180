@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
 
-<form action="/main" method="post">
+<section class="main">
+    <form action="/main" method="post">
     <button type="submit">Back to home page</button>
-</form><br>
+    </form><br>
+</section><br>
 
 <section class="products">
 {% for y in placed_order %}
@@ -31,15 +33,20 @@
                 </form>
             </div>
     </div>
-    {% for c in car_review %}
-        {% if c.title == y.title %}
-            <h4>Your Reviews:</h4>
-            <p>{{ c.description }}</p>
-            <p>{{ c.rating }} stars!</p>
-        {% else %}
-            <p>No reviews on this product yet.</p>
-        {% endif %}
-    {% endfor %}
+     {% set reviews = false %}
+        <h4>Your Reviews:</h4>
+        {% for c in car_review %}
+            {% if c.title == y.title %}
+                <p>{{ c.description }}</p>
+                <p>{{ c.rating }} stars!</p><br>
+            {% endif %}
+        {% set reviews = true %}
+
+        {% endfor %}
+
+            {% if reviews == false %}
+                <p>No reviews for this product</p>
+            {% endif %}
 </div>
 
 {% endfor %}

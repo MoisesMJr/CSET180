@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
-
 <br>
+<section class="main">
+    <form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+    </form><br>
+</section><br>
+
 <section class="returns">
     <div class="returndiv">
         <h3 class="aform4">Talk to your favorite vendor!</h3><br>
-        <form action="/chat" method="post" class="aform4">
+        <form action="/chat" method="POST" class="aform4">
 
             <label><b>Which vendor would you like to speak to?</b></label>
              <select name="vid" required>

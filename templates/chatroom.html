@@ -1,31 +1,20 @@
 {% extends "base.html" %}
 {% block body %}
 <br>
+
+<section class="main">
+    <form action="/main" method="post">
+    <button type="submit">Back to home page</button>
+    </form><br>
+</section><br>
+
 <section class="chat-area">
     <form action="/chatroom" method="post" class="aform4">
     <div class="chatroom-area">
-        Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br> Hello, user<br>
-
-    user id, message, datetime<br>
-    vendor id, message, datetime<br>
+        <h5><em>How can we assist you, {{ curr }}?</em></h5><br>
+        {% for s in startchat %}
+        <p><b>{{ s.user_from }}: </b>{{ s.text }} <br>{{ s.date }}</p>
+        {% endfor %}
     </div><br>
     <textarea maxlength="250" placeholder="Write something.." name="message" style="
         height: 45px;
@@ -34,6 +23,12 @@
         border: 2px solid black;
         border-radius: 4px;" required></textarea><br>
     <input type="submit" name="search" class="aform2" value="Submit">
+    </form>
+</section><br>
+
+<section class="logout">
+    <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
     </form>
 </section><br>
 {% endblock %}

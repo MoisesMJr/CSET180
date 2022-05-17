@@ -1,6 +1,7 @@
 import os
 import sys
 
+import flask
 from flask import Flask, render_template, request, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -630,7 +631,6 @@ def post_review():
 @app.route('/reviewpage', methods=['GET'])
 def get_reviewpage():
     allreviews = conn.execute(text(f"select * from users inner join reviews on users.id = reviews.id")).all()
-    print(allreviews, file=sys.stderr)
     return render_template('reviewpage.html', allreviews=allreviews)
 
 
@@ -714,7 +714,6 @@ def post_returnrequests():
     change_req_status = request.form['change_req_status']
     cid = request.form['cid']
     conn.execute(text(f"update complaints set status = '{change_req_status}' where cid = {cid}"))
-    print('test test test test', cid, file=sys.stderr)
     return redirect(url_for('get_returnrequests', requests=requests))
 # ---------------------------------------------
 # message/chats
@@ -744,7 +743,6 @@ def post_chat():
     vendor_id = conn.execute(
         text(f"select pid, vendor_id, username, title from products join users on products.vendor_id = users.id where "
              f"username = '{user_to}' and title = '{title}'")).all()
-    print('test test test test', vendor_id, file=sys.stderr)
     if len(vendor_id) == 0:
         notright = "This product is not sold by this vendor."
         return render_template('chat.html', notright=notright, bought=bought, vendors=vendors)
@@ -753,7 +751,7 @@ def post_chat():
         mid = conn.execute(text(f"select max(mid) from messages")).all()[0][0]
         conn.execute(text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
                           f" '{message}')"))
-        return render_template('chat.html', vendors=vendors, curr=curr, bought=bought)
+        return redirect(url_for('get_chatroom'))
 # ---------------------------------------------
 # chatroom
 
@@ -761,14 +759,55 @@ def post_chat():
 @app.route('/chatroom', methods=['GET'])
 def get_chatroom():
     curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
-    conn.execute(text(f"select * from messages_chats"))
-    conn.execute(text(f"select * from messages_chats where mid =  order by date"))
-    return render_template('chatroom.html', curr=curr)
+    mid = conn.execute(text(f"select max(mid) from messages_chats")).all()[0][0]
+    user_to = conn.execute(text(f"select max(user_to) from messages_chats")).all()[0][0]
+    startchat = conn.execute(text(f"select * from messages_chats where mid = {mid} and user_to = '{user_to}' order by date"))
+    return render_template('chatroom.html', curr=curr, startchat=startchat)
 
 
 @app.route('/chatroom', methods=['POST'])
 def post_chatroom():
-    return render_template('chatroom.html')
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    mid = conn.execute(text(f"select max(mid) from messages_chats")).all()[0][0]
+    user_to = conn.execute(text(f"select max(user_to) from messages_chats")).all()[0][0]
+    message = request.form['message']
+    conn.execute(
+        text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
+             f" '{message}')"))
+    startchat = conn.execute(
+        text(f"select * from messages_chats where mid = {mid} and user_to = '{user_to}' order by date"))
+    return render_template('chatroom.html', curr=curr, startchat=startchat)
+# ---------------------------------------------
+# all chatrooms
+
+
+@app.route('/alluserchats', methods=['GET'])
+def get_alluserchats():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    allchats = conn.execute(text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+                                 f"user_to = '{curr}'")).all()
+    mid = request.args.get('mid')
+    allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+    print('test test test test', allchats, file=sys.stderr)
+    print('test test test test', allchatspost, file=sys.stderr)
+    print('test test test test', mid, file=sys.stderr)
+    return render_template('alluserchats.html', curr=curr, allchats=allchats, allchatspost=allchatspost)
+
+
+@app.route('/alluserchats', methods=['POST'])
+def post_alluserchats():
+    curr = conn.execute(text(f"select username from currentuser")).all()[0][0]
+    allchats = conn.execute(
+        text(f"select * from messages natural join messages_chats where user_from = '{curr}' or "
+             f"user_to = '{curr}'")).all()
+    mid = request.form['mid']
+    message = request.form['message']
+    user_to = request.form['user_to']
+    conn.execute(
+        text(f"insert into messages_chats (mid, user_from, user_to, text) values ({mid}, '{curr}', '{user_to}',"
+             f" '{message}')"))
+    allchatspost = conn.execute(text(f"select * from messages_chats where mid = {mid} order by date")).all()
+    return render_template('alluserchats.html', curr=curr, allchatspost=allchatspost, allchats=allchats)
 
 
 if __name__ == '__main__':
